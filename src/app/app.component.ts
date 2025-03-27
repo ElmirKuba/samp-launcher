@@ -8,9 +8,10 @@ import { APP_CONFIG } from '../environments/environment';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(
-    private electronService: ElectronService // private translate: TranslateService
-  ) {
+  activeTabIndex = 1;
+
+  constructor(private electronService: ElectronService) {
+    console.log('AppComponent init');
     console.log('APP_CONFIG', APP_CONFIG);
     if (electronService.isElectron) {
       console.log(process.env);
@@ -25,4 +26,12 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     //
   }
+
+  onTabChange(index: number): void {
+    this.fetchTabData();
+
+    this.activeTabIndex = index;
+  }
+
+  private fetchTabData(): void {}
 }

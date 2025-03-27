@@ -1,1 +1,18 @@
-app component work!
+<mat-tab-group
+  [selectedIndex]="activeTabIndex"
+  mat-stretch-tabs="false"
+  mat-align-tabs="end"
+  (selectedIndexChange)="onTabChange($event)"
+>
+  <mat-tab label="Главная">
+    <ng-container *ngIf="activeTabIndex === 0">
+      <h2>Содержимое "Главная"</h2>
+      <p>Контент вкладки "Главная".</p>
+    </ng-container>
+  </mat-tab>
+  <mat-tab label="Настройки">
+    <ng-container *ngIf="activeTabIndex === 1">
+      <app-settings></app-settings>
+    </ng-container>
+  </mat-tab>
+</mat-tab-group>

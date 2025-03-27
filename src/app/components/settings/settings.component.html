@@ -1,0 +1,40 @@
+<div class="app-settings">
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <form class="app-settings__form-settings" [formGroup]="settingsForm">
+        <mat-divider></mat-divider>
+
+        <p class="mat-caption">
+          Укажите URL-адрес, с которого будут загружаться файлы GTA San Andreas
+          MultiPlayer. Этот адрес должен быть действительным и доступным. Так же
+          по этому пути должен распологаться version.json.
+        </p>
+
+        <mat-form-field>
+          <mat-label>URL-адрес GTA-SAMP</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="downloadURLOfGTASanAndreasFiles"
+          />
+          @if (settingsForm.value['downloadURLOfGTASanAndreasFiles']) {
+          <button
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="clerableInput('downloadURLOfGTASanAndreasFiles')"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          }
+        </mat-form-field>
+
+        <mat-divider></mat-divider>
+
+        <div>div</div>
+      </form>
+
+      <!--  -->
+    </mat-card-content>
+  </mat-card>
+</div>

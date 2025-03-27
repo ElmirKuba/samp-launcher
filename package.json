@@ -1,8 +1,7 @@
 {
-  "name": "angular-electron",
+  "name": "samp-launcher",
   "version": "14.0.1",
-  "description": "Angular 17 with Electron 30 (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "description": "Launcher GTA SAMP MacOS",
   "author": {
     "name": "Maxime GRIS",
     "email": "maxime.gris@gmail.com"
