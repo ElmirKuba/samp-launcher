@@ -18,9 +18,15 @@ export class StorageService {
   /** Объект для хранения данных из config.json */
   private configData: IStorage = {
     downloadURLOfGTASanAndreasFiles: null,
+    downloadURLOfCrossover: null,
+    nickNameSAMP: null,
   };
 
   constructor(private electronService: ElectronService) {
+    if (!this.electronService.isElectron) {
+      return;
+    }
+
     this.initStorage();
   }
 
@@ -55,6 +61,8 @@ export class StorageService {
     } else {
       this.setAllData({
         downloadURLOfGTASanAndreasFiles: null,
+        downloadURLOfCrossover: null,
+        nickNameSAMP: null,
       });
     }
   }
@@ -83,8 +91,6 @@ export class StorageService {
 
   /** Удаляет значение по ключу */
   deleteValue(key: keyof IStorage): void {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     delete this.configData[key];
     this.saveConfig();
   }

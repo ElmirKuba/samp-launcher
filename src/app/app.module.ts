@@ -16,6 +16,8 @@ import { AppComponent } from './app.component';
 import { ElectronService } from './core/services/electron.service';
 import { StorageService } from './core/services/storage.service';
 import { SettingsComponent } from './components/settings/settings.component';
+import { FilesAngularService } from './services/files-check.service';
+import { AxiosAngularService } from './core/services/axios.service';
 
 @NgModule({
   declarations: [AppComponent, SettingsComponent],
@@ -33,7 +35,14 @@ import { SettingsComponent } from './components/settings/settings.component';
     MatIconModule,
     MatDividerModule,
   ],
-  providers: [provideAnimationsAsync(), ElectronService, StorageService],
+  providers: [
+    provideAnimationsAsync(),
+    ElectronService,
+    StorageService,
+    AxiosAngularService,
+
+    FilesAngularService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {

@@ -18,12 +18,11 @@ function createWindow(): BrowserWindow {
       nodeIntegration: true,
       allowRunningInsecureContent: serve,
       contextIsolation: false,
+      webSecurity: false,
     },
   });
 
   win.webContents.openDevTools();
-
-  // initStore();
 
   ipcMain.handle('store-set', (event, key, value) => {
     // @ts-ignore

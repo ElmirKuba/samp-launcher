@@ -6,6 +6,10 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as process from 'process';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import axios from 'axios';
+import * as https from 'https';
 
 /**
  * Сервис для работы с API Electron и Node.js в Angular-приложении.
@@ -30,7 +34,10 @@ export class ElectronService {
   path!: typeof path;
   /** Модуль process для доступа к информации о текущем процессе. */
   process!: typeof process;
-  /** Для работы с json файлами */
+  /** axios */
+  axios!: typeof axios;
+  /** https */
+  https!: typeof https;
 
   constructor() {
     if (this.isElectron) {
@@ -41,6 +48,8 @@ export class ElectronService {
       this.os = (window as any).require('os');
       this.path = (window as any).require('path');
       this.process = (window as any).require('process');
+      this.axios = (window as any).require('axios');
+      this.https = (window as any).require('https');
 
       this.childProcess = (window as any).require('child_process');
       this.childProcess.exec('node -v', (error, stdout, stderr) => {

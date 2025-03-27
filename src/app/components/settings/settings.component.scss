@@ -2,17 +2,37 @@
   padding-top: 10px;
 
   &__form-settings {
-    .mat-caption {
-      margin-bottom: 10px; /* Отступ снизу до поля ввода */
-      color: #757575; /* Серый цвет, типичный для подсказок в Material */
+    .info-card {
+      background-color: #e3f2fd; /* Светло-голубой фон для информации */
+      margin-bottom: 20px; /* Отступ снизу */
+      padding: 10px; /* Внутренние отступы */
+      display: flex;
+      gap: 10px; /* Расстояние между иконкой и текстом */
     }
 
-    mat-divider {
-      padding-bottom: 20px;
+    .error-card {
+      background-color: #ffebee; /* Светло-красный фон для ошибки */
+      margin-top: 10px; /* Отступ сверху */
+      margin-bottom: 20px; /* Отступ снизу */
+      padding: 10px; /* Внутренние отступы */
+      display: flex;
+      gap: 10px; /* Расстояние между иконкой и текстом */
+    }
+
+    .info-card mat-icon {
+      color: #1976d2; /* Синий цвет для иконки информации */
+    }
+
+    .error-card mat-icon {
+      color: #f44336; /* Красный цвет для иконки ошибки */
     }
 
     mat-form-field {
       width: 100%;
+    }
+
+    mat-divider {
+      padding-bottom: 20px;
     }
   }
 }
