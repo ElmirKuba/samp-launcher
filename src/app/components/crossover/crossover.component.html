@@ -33,15 +33,26 @@
           ></mat-progress-bar>
 
           @if (modeProgress === 'determinate') {
-          <div>Скачивание: {{ installationProgress }}%</div>
+          <div>
+            Скачивание: {{ installationProgress }}% | Скачано
+            {{ loadedProgress }} из {{ totalProgress }} байт
+          </div>
           } @else {
           <div>Скачивание завершено.</div>
           <div>Распаковка Crossover.</div>
           }
-          <!--  -->
-          }
 
-          <!-- <mat-progress-bar mode="indeterminate"></mat-progress-bar> -->
+          <button
+            class="app-crossover__button"
+            mat-raised-button
+            color="primary"
+            (click)="cancelDownload()"
+          >
+            Отменить установку
+          </button>
+          }
+          <br />
+          <br />
         </div>
         }
       </mat-list>

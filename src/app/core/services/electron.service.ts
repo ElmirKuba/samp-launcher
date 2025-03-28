@@ -9,6 +9,9 @@ import process from 'process';
 import axios from 'axios';
 import https from 'https';
 import child_process from 'child_process';
+import util from 'util';
+import stream from 'stream';
+import decompress from 'decompress';
 
 /**
  * Сервис для работы с API Electron и Node.js в Angular-приложении.
@@ -39,6 +42,12 @@ export class ElectronService {
   https!: typeof https;
   /** child_process */
   child_process!: typeof child_process;
+  /** util */
+  util!: typeof util;
+  /** stream */
+  stream!: typeof stream;
+  /** decompress */
+  decompress!: typeof decompress;
 
   constructor() {
     if (this.isElectron) {
@@ -52,6 +61,9 @@ export class ElectronService {
       this.axios = (window as any).require('axios');
       this.https = (window as any).require('https');
       this.child_process = (window as any).require('child_process');
+      this.util = (window as any).require('util');
+      this.stream = (window as any).require('stream');
+      this.decompress = (window as any).require('decompress');
 
       this.childProcess = (window as any).require('child_process');
       this.childProcess.exec('node -v', (error, stdout, stderr) => {

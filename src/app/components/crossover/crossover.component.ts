@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CrossoverService } from '../../services/crossover.service';
 import { Subscription } from 'rxjs';
 import { ProgressBarMode } from '@angular/material/progress-bar';
+import { FilesAngularService } from '../../services/files-check.service';
+import { IDownloadProgress } from '../../interfaces/files.interfaces';
 
 /** Компонент по работе с Crossover */
 @Component({
@@ -12,19 +14,28 @@ import { ProgressBarMode } from '@angular/material/progress-bar';
 export class CrossoverComponent implements OnInit, OnDestroy {
   /** Подписант статуса работы Crossover */
   crossoverStatusSubscription: Subscription | null = null;
+  /** Подписант статуса работы Crossover */
+  progressDownloadSubscription: Subscription | null = null;
   /** Результат подписи статуса работы Crossover */
   crossoverStatusReady!: boolean;
   /** Значение прогресса (0–100) */
   installationProgress: number = 0;
+  /** Сколько скачано в байтах уже */
+  loadedProgress: number = 0;
+  /** Сколько всего скачать в байтах */
+  totalProgress: number = 0;
   /** Режим работы прогресс-бара */
   modeProgress: ProgressBarMode = 'determinate';
 
-  constructor(private crossoverService: CrossoverService) {}
+  constructor(
+    private crossoverService: CrossoverService,
+    private filesAngularService: FilesAngularService
+  ) {}
 
   ngOnInit(): void {
     console.log('CrossoverComponent init');
 
-    this.crossoverService.checkCrossoverStatusReady();
+    void this.crossoverService.checkCrossoverStatusReady();
 
     if (this.crossoverStatusSubscription !== null) {
       this.crossoverStatusSubscription.unsubscribe();
@@ -36,6 +47,47 @@ export class CrossoverComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (valueStatus) => {
           this.crossoverStatusReady = valueStatus;
+
+          if (this.crossoverStatusReady) {
+            this.modeProgress = 'determinate';
+          }
+        },
+      });
+
+    if (this.progressDownloadSubscription !== null) {
+      this.progressDownloadSubscription.unsubscribe();
+      this.progressDownloadSubscription = null;
+    }
+
+    this.progressDownloadSubscription = this.filesAngularService
+      .getDownloadProgress()
+      .subscribe({
+        next: (progress: IDownloadProgress | null) => {
+          if (progress) {
+            this.installationProgress = Math.round(
+              progress.progressDecimal * 100
+            );
+
+            this.loadedProgress = progress.loaded;
+            this.totalProgress = progress.total;
+
+            console.log(
+              'getDownloadProgress subscribe::?',
+              Boolean(progress),
+              progress,
+              `${this.installationProgress}%`
+            );
+
+            if (this.installationProgress >= 100) {
+              this.modeProgress = 'indeterminate';
+
+              void this.crossoverService.checkCrossoverStatusReady();
+            }
+          }
+        },
+
+        error: (err) => {
+          console.error('Download error:', err);
         },
       });
   }
@@ -45,20 +97,25 @@ export class CrossoverComponent implements OnInit, OnDestroy {
       this.crossoverStatusSubscription.unsubscribe();
       this.crossoverStatusSubscription = null;
     }
+
+    if (this.progressDownloadSubscription !== null) {
+      this.progressDownloadSubscription.unsubscribe();
+      this.progressDownloadSubscription = null;
+    }
   }
 
   /** Установка Crossover и проверка результата */
-  installAndCheck() {
-    this.crossoverService.downloadCrossoverAndInstall();
+  async installAndCheck() {
+    const statusDownloadStated =
+      await this.crossoverService.downloadCrossoverAndInstall();
 
-    // this.installationProgress = 0;
+    console.log('statusDownloadStated', statusDownloadStated);
+  }
 
-    // const interval = setInterval(() => {
-    //   this.installationProgress += 10;
-    //   if (this.installationProgress >= 100) {
-    //     clearInterval(interval);
-    //     this.modeProgress = 'indeterminate';
-    //   }
-    // }, 300);
+  /** Отмена загрузки */
+  cancelDownload() {
+    this.filesAngularService.cancelDownload();
+
+    void this.crossoverService.checkCrossoverStatusReady();
   }
 }

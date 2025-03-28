@@ -11,6 +11,8 @@ export class StorageService {
   private homeDir: string | null = null;
   /** Имя пользователя MacOS */
   private userName: string | null = null;
+  /** Путь к папке с приложениями MacOS */
+  private applicationDir: string = '/Applications';
   /** Путь до данных samp-launcher */
   private appDataPath: string | null = null;
   /** Путь до основного файла настроек samp-launcher */
@@ -19,6 +21,10 @@ export class StorageService {
   private templateOSCrossover: string | null = 'win7';
   /** Описание для бутылки Crossover */
   private descriptionOSCrossover: string | null = 'Windows7_32_samp';
+  /** Путь к скачанному Crossover */
+  private pathForFileCrossover: string | null = null;
+  /** Имя архива файла Crossover или имя приложения Crossover */
+  private crossoverNameFile: string | null = null;
   /** Объект для хранения данных из config.json */
   private configData: IStorage = {
     downloadURLOfGTASanAndreasFiles: null,
@@ -89,8 +95,8 @@ export class StorageService {
   }
 
   /** Получает значение по ключу */
-  public getValue(key: keyof IStorage): any {
-    return this.configData[key];
+  public getValue<ReturnType>(key: keyof IStorage): ReturnType {
+    return this.configData[key] as ReturnType;
   }
 
   /** Устанавливает значение по ключу */
@@ -126,6 +132,11 @@ export class StorageService {
     return this.userName;
   }
 
+  /** Путь к папке с приложениями MacOS */
+  public getApplicationDir() {
+    return this.applicationDir;
+  }
+
   /** Путь до данных samp-launcher */
   public getAppDataPath() {
     return this.appDataPath;
@@ -144,5 +155,25 @@ export class StorageService {
   /** Описание для бутылки Crossover */
   public getDescriptionOSCrossover() {
     return this.descriptionOSCrossover;
+  }
+
+  /** Получить прямой путь до файла Crossover  */
+  public getPathForFileCrossover() {
+    return this.pathForFileCrossover;
+  }
+
+  /** Установить прямой путь до файла Crossover  */
+  public setPathForFileCrossover(path: string) {
+    this.pathForFileCrossover = path;
+  }
+
+  /** Установить имя Crossover */
+  public setCrossoverNameFile(fileName: string) {
+    this.crossoverNameFile = fileName;
+  }
+
+  /** Получить имя Crossover */
+  public getCrossoverNameFile() {
+    return this.crossoverNameFile;
   }
 }

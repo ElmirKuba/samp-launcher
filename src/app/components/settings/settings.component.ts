@@ -12,10 +12,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { debounceTime } from 'rxjs';
-import {
-  remoteFileValidator,
-  remoteSAMPFilesValidator,
-} from '../../validators/version-validator';
 import { FilesAngularService } from '../../services/files-check.service';
 import { MatChipInputEvent } from '@angular/material/chips';
 
@@ -35,12 +31,12 @@ export class SettingsComponent implements OnInit {
     /** URL загрузки файлов GTA San Andreas () */
     downloadURLOfGTASanAndreasFiles: new FormControl<string | null>('', {
       validators: [Validators.required],
-      asyncValidators: [remoteSAMPFilesValidator(this.filesAngularService)],
+      // asyncValidators: [remoteSAMPFilesValidator(this.filesAngularService)],
       updateOn: 'change',
     }),
     downloadURLOfCrossover: new FormControl<string | null>('', {
       validators: [Validators.required],
-      asyncValidators: [remoteFileValidator(this.filesAngularService)],
+      // asyncValidators: [remoteFileValidator(this.filesAngularService)],
       updateOn: 'change',
     }),
     nickNameSAMP: new FormControl<string | null>('', {
@@ -81,11 +77,7 @@ export class SettingsComponent implements OnInit {
       downloadURLOfCrossover: configAppAllData.downloadURLOfCrossover,
       nickNameSAMP: configAppAllData.nickNameSAMP,
       nameBottleCrossover: configAppAllData.nameBottleCrossover,
-      // folderPathElementsOfGTASanAndreasFiles:
-      // configAppAllData.folderPathElementsOfGTASanAndreasFiles,
     });
-
-    // this.reactiveKeywordsPathGTASAMP = [];
 
     this.reactiveKeywordsPathGTASAMP.set(
       configAppAllData.folderPathElementsOfGTASanAndreasFiles
@@ -99,9 +91,9 @@ export class SettingsComponent implements OnInit {
 
     this.settingsForm.valueChanges.pipe(debounceTime(1000)).subscribe({
       next: (formDatas) => {
-        if (!this.settingsForm.valid) {
-          return;
-        }
+        // if (!this.settingsForm.valid) {
+        //   return;
+        // }
 
         console.log('::formDatas::', formDatas);
 

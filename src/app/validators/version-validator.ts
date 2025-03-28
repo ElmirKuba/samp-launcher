@@ -37,7 +37,6 @@ export function remoteSAMPFilesValidator(
   };
 }
 
-/** Валидатор проверки файла по URL */
 export function remoteFileValidator(
   service: FilesAngularService
 ): AsyncValidatorFn {
@@ -58,10 +57,13 @@ export function remoteFileValidator(
       return of({ invalidUrl: true });
     }
 
-    // Выполняем запрос к version.json с небольшой задержкой (debounce)
+    // Выполняем запрос к файлу с небольшой задержкой (debounce)
     return timer(500).pipe(
-      switchMap(async () => await service.checkRemoteCrossoverFile(value)),
-      map((response) => (response ? null : { versionNotFound: true }))
+      switchMap(async () => {
+        console.log('Проверка URL:', value);
+        return await service.checkRemoteFileFromURL(value);
+      }), // Возвращаем Promise<boolean>
+      map((response) => (response ? null : { fileNotFound: true }))
     );
   };
 }
