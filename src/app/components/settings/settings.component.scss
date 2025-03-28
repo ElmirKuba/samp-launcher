@@ -17,6 +17,7 @@
       padding: 10px; /* Внутренние отступы */
       display: flex;
       gap: 10px; /* Расстояние между иконкой и текстом */
+      border-radius: 4px;
     }
 
     .info-card mat-icon {
@@ -34,5 +35,17 @@
     mat-divider {
       padding-bottom: 20px;
     }
+  }
+
+  &__server-address-container {
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-top: 10px;
+  }
+
+  &__server-address-item {
+    display: flex;
+    gap: 10px;
   }
 }

@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { AppComponent } from './app.component';
 import { ElectronService } from './core/services/electron.service';
@@ -18,9 +19,11 @@ import { StorageService } from './core/services/storage.service';
 import { SettingsComponent } from './components/settings/settings.component';
 import { FilesAngularService } from './services/files-check.service';
 import { AxiosAngularService } from './core/services/axios.service';
+import { MainComponent } from './components/main/main.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
-  declarations: [AppComponent, SettingsComponent],
+  declarations: [AppComponent, SettingsComponent, MainComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -34,6 +37,8 @@ import { AxiosAngularService } from './core/services/axios.service';
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
+    MatExpansionModule,
+    MatChipsModule,
   ],
   providers: [
     provideAnimationsAsync(),

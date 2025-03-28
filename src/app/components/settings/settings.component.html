@@ -123,7 +123,7 @@
           }
         </mat-form-field>
 
-        <!-- Плашка ошибки для URL-адреса Crossover -->
+        <!-- Плашка ошибки для ника -->
         @if (!settingsForm.controls['nickNameSAMP'].valid &&
         settingsForm.controls['nickNameSAMP'].touched) {
         <mat-card class="error-card">
@@ -139,6 +139,164 @@
         }
 
         <mat-divider></mat-divider>
+
+        <mat-form-field>
+          <mat-label>Наименование бутылки Crossover</mat-label>
+          <input matInput type="text" formControlName="nameBottleCrossover" />
+          @if (settingsForm.value['nameBottleCrossover']) {
+          <button
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="clerableInput('nameBottleCrossover')"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          }
+        </mat-form-field>
+
+        <!-- Плашка ошибки для наименования бутылки Crossover -->
+        @if (!settingsForm.controls['nameBottleCrossover'].valid &&
+        settingsForm.controls['nameBottleCrossover'].touched) {
+        <mat-card class="error-card">
+          <mat-card-content>
+            <mat-icon>error</mat-icon>
+            <br />
+            <span>
+              Поле не валидно. Пожалуйста, введите нормальное наименование
+              бутылки Crossover (Латиница: верхний и нижний регистр, нижнее
+              подчеркивание).
+            </span>
+          </mat-card-content>
+        </mat-card>
+        }
+
+        <mat-divider></mat-divider>
+
+        <!-- Информационная плашка для пути сборки GTA SAMP -->
+        <mat-card class="info-card">
+          <mat-card-content>
+            <mat-icon>info</mat-icon>
+            <br />
+            <span>
+              Вам нужно указать, где вы хотите хранить вашу сборку GTA SAMP в
+              рамках создаваемой бутылки.
+              <br />
+              Например ваша бутылка называется "{{
+                settingsForm.value["nameBottleCrossover"]
+              }}". Тогда в рамках MacOS путь до нее будет "/Users/<ВАШЕ ИМЯ
+              ПОЛЬЗОВАТЕЛЯ MACOS>/Library/Application
+              Support/CrossOver/Bottles/{{
+                settingsForm.value["nameBottleCrossover"]
+              }}/" (Если вы не переназначали путь по умолчанию в настройках
+              Crossover!).
+              <br />
+              Например вы введете "Games" и нажмете Enter, потом введете "SAMP"
+              и нажмете Enter, значит вы хотите сохранить скачиваемую сборку GTA
+              SAMP в папку "SAMP" в папке "Games".
+              <br /><br />
+              В таком случае скачанная сборка GTA SAMP будет храниться
+              относительно операционной системы MacOS по пути "/Users/<ВАШЕ ИМЯ
+              ПОЛЬЗОВАТЕЛЯ MACOS>/Library/Application
+              Support/CrossOver/Bottles/{{
+                settingsForm.value["nameBottleCrossover"]
+              }}/drive_c/Games/SAMP/". <br /><br />
+              Сборка GTA SAMP будет считать что работает в среде Windows 7 32bit
+              и будет думать что храниться по пути "C:\\Games\\SAMP".
+              <br /><br />
+              Не пытайтесь создать диск с литером "D" либо папку "drive_d" в
+              папке вашей бутылки, мы не тестировали такое поведение лаунчера и
+              Crossover. По умолчанию кроссовер работает с диском с литерой "C"!
+            </span>
+          </mat-card-content>
+        </mat-card>
+
+        <section>
+          <mat-form-field class="example-form-field">
+            <mat-label>Укажите названия папок пути хранения GTA SAMP</mat-label>
+            <mat-chip-grid
+              #reactiveChipGrid
+              aria-label="Enter reactive form keywords"
+              [formControl]="
+                settingsForm.controls['folderPathElementsOfGTASanAndreasFiles']
+              "
+            >
+              @for (keyword of reactiveKeywords(); track keyword) {
+              <mat-chip-row (removed)="removeFolderPathElement(keyword)">
+                {{ keyword }}
+                <button
+                  matChipRemove
+                  aria-label="'remove reactive form' + keyword"
+                >
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
+            <input
+              placeholder="Нажмите Enter после ввода текста"
+              [matChipInputFor]="reactiveChipGrid"
+              (matChipInputTokenEnd)="addFolderPathElement($event)"
+            />
+          </mat-form-field>
+        </section>
+
+        <mat-divider></mat-divider>
+
+        <!-- Сервера -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Серверы SAMP </mat-panel-title>
+            <mat-panel-description>
+              {{
+                serverAdresses.length
+                  ? serverAdresses.length + " серверов"
+                  : "Нет серверов"
+              }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!-- Контейнер с серверами -->
+          <div formArrayName="serverAdresses">
+            <div
+              *ngFor="let server of serverAdresses.controls; let i = index"
+              [formGroupName]="i"
+              class="app-settings__server-address-container"
+            >
+              <div class="app-settings__server-address-item">
+                <mat-form-field>
+                  <mat-label>IP-адрес сервера</mat-label>
+                  <input matInput type="text" formControlName="ip" />
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>Порт</mat-label>
+                  <input matInput type="text" formControlName="port" />
+                </mat-form-field>
+
+                <button mat-icon-button color="warn" (click)="removeServer(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+
+              <!-- Плашка ошибки -->
+              @if (!server.valid && server.touched) {
+              <mat-card class="error-card">
+                <mat-card-content>
+                  <mat-icon>error</mat-icon>
+                  <br />
+                  <span>Некорректный IP или порт. Проверьте ввод.</span>
+                </mat-card-content>
+              </mat-card>
+              }
+            </div>
+          </div>
+
+          <!-- Кнопка добавления нового сервера -->
+          <button mat-raised-button color="primary" (click)="addServer()">
+            Добавить сервер
+          </button>
+        </mat-expansion-panel>
       </form>
     </mat-card-content>
   </mat-card>

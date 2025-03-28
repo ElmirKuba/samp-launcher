@@ -15,11 +15,18 @@ export class StorageService {
   private appDataPath: string | null = null;
   /** Путь до основного файла настроек samp-launcher */
   private configPath: string | null = null;
+  /** Шаблон OS для бутылки Crossover */
+  private templateOSCrossover: string | null = 'win7';
+  /** Описание для бутылки Crossover */
+  private descriptionOSCrossover: string | null = 'Windows7_32_samp';
   /** Объект для хранения данных из config.json */
   private configData: IStorage = {
     downloadURLOfGTASanAndreasFiles: null,
     downloadURLOfCrossover: null,
     nickNameSAMP: null,
+    nameBottleCrossover: null,
+    folderPathElementsOfGTASanAndreasFiles: [],
+    serverAdresses: [],
   };
 
   constructor(private electronService: ElectronService) {
@@ -63,6 +70,9 @@ export class StorageService {
         downloadURLOfGTASanAndreasFiles: null,
         downloadURLOfCrossover: null,
         nickNameSAMP: null,
+        nameBottleCrossover: null,
+        folderPathElementsOfGTASanAndreasFiles: [],
+        serverAdresses: [],
       });
     }
   }
