@@ -8,7 +8,7 @@ import { APP_CONFIG } from '../environments/environment';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  activeTabIndex = 1;
+  activeTabIndex = 0;
 
   constructor(private electronService: ElectronService) {
     console.log('AppComponent init');

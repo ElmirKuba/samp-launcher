@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatListModule } from '@angular/material/list';
 
 import { AppComponent } from './app.component';
 import { ElectronService } from './core/services/electron.service';
@@ -21,9 +22,16 @@ import { FilesAngularService } from './services/files-check.service';
 import { AxiosAngularService } from './core/services/axios.service';
 import { MainComponent } from './components/main/main.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { CrossoverComponent } from './components/crossover/crossover.component';
+import { CrossoverService } from './services/crossover.service';
 
 @NgModule({
-  declarations: [AppComponent, SettingsComponent, MainComponent],
+  declarations: [
+    AppComponent,
+    SettingsComponent,
+    MainComponent,
+    CrossoverComponent,
+  ],
   imports: [
     BrowserModule,
     FormsModule,
@@ -39,6 +47,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatDividerModule,
     MatExpansionModule,
     MatChipsModule,
+    MatListModule,
   ],
   providers: [
     provideAnimationsAsync(),
@@ -47,6 +56,7 @@ import { MatChipsModule } from '@angular/material/chips';
     AxiosAngularService,
 
     FilesAngularService,
+    CrossoverService,
   ],
   bootstrap: [AppComponent],
 })

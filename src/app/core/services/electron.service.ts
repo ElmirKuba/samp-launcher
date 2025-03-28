@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 
 import { ipcRenderer, webFrame } from 'electron';
-import * as childProcess from 'child_process';
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
-import * as process from 'process';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+import childProcess from 'child_process';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import process from 'process';
 import axios from 'axios';
-import * as https from 'https';
+import https from 'https';
+import child_process from 'child_process';
 
 /**
  * Сервис для работы с API Electron и Node.js в Angular-приложении.
@@ -38,6 +37,8 @@ export class ElectronService {
   axios!: typeof axios;
   /** https */
   https!: typeof https;
+  /** child_process */
+  child_process!: typeof child_process;
 
   constructor() {
     if (this.isElectron) {
@@ -50,6 +51,7 @@ export class ElectronService {
       this.process = (window as any).require('process');
       this.axios = (window as any).require('axios');
       this.https = (window as any).require('https');
+      this.child_process = (window as any).require('child_process');
 
       this.childProcess = (window as any).require('child_process');
       this.childProcess.exec('node -v', (error, stdout, stderr) => {

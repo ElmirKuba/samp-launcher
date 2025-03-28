@@ -1,0 +1,22 @@
+.app-crossover {
+  mat-icon {
+    margin-right: 10px;
+    font-size: 24px;
+    vertical-align: middle;
+  }
+
+  .completed-icon {
+    color: green;
+  }
+
+  .uncompleted-icon {
+    color: red;
+  }
+
+  span {
+    vertical-align: middle;
+  }
+
+  .completed-text {
+  }
+}

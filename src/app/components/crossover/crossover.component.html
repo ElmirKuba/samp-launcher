@@ -1,0 +1,21 @@
+<div class="app-crossover">
+  <mat-card>
+    <mat-card-content>
+      <mat-list>
+        @if (crossoverStatusReady) {
+        <mat-list-item>
+          <mat-icon class="completed-icon">check_circle</mat-icon>
+          <span class="completed-text">Crossover готов к работе!</span>
+        </mat-list-item>
+        } @else {
+        <mat-list-item>
+          <mat-icon class="uncompleted-icon">warning</mat-icon>
+          <span> Crossover не готов к работе, разберитесь с этим: </span>
+        </mat-list-item>
+
+        <div>1234</div>
+        }
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</div>

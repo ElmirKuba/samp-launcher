@@ -28,7 +28,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 export class SettingsComponent implements OnInit {
   // Разделители для ввода нового чипса
 
-  readonly reactiveKeywords = signal<string[]>([]);
+  readonly reactiveKeywordsPathGTASAMP = signal<string[]>([]);
 
   /** Форма компонента настроек samp-launcher */
   settingsForm = new FormGroup<Record<keyof IStorage, AbstractControl>>({
@@ -81,7 +81,15 @@ export class SettingsComponent implements OnInit {
       downloadURLOfCrossover: configAppAllData.downloadURLOfCrossover,
       nickNameSAMP: configAppAllData.nickNameSAMP,
       nameBottleCrossover: configAppAllData.nameBottleCrossover,
+      // folderPathElementsOfGTASanAndreasFiles:
+      // configAppAllData.folderPathElementsOfGTASanAndreasFiles,
     });
+
+    // this.reactiveKeywordsPathGTASAMP = [];
+
+    this.reactiveKeywordsPathGTASAMP.set(
+      configAppAllData.folderPathElementsOfGTASanAndreasFiles
+    );
 
     if (configAppAllData.serverAdresses.length > 0) {
       for (const serverAdress of configAppAllData.serverAdresses) {
@@ -152,7 +160,10 @@ export class SettingsComponent implements OnInit {
     const value = (event.value || '').trim();
 
     if (value) {
-      this.reactiveKeywords.update((keywords) => [...keywords, value]);
+      this.reactiveKeywordsPathGTASAMP.update((keywords) => [
+        ...keywords,
+        value,
+      ]);
     }
 
     event.chipInput.clear();
@@ -160,7 +171,7 @@ export class SettingsComponent implements OnInit {
 
   /** Добавить элемент пути к месту хранения сборки GTA SAMP */
   removeFolderPathElement(keyword: string): void {
-    this.reactiveKeywords.update((keywords) => {
+    this.reactiveKeywordsPathGTASAMP.update((keywords) => {
       const index = keywords.indexOf(keyword);
       if (index < 0) {
         return keywords;

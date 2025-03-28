@@ -221,7 +221,7 @@
                 settingsForm.controls['folderPathElementsOfGTASanAndreasFiles']
               "
             >
-              @for (keyword of reactiveKeywords(); track keyword) {
+              @for (keyword of reactiveKeywordsPathGTASAMP(); track keyword) {
               <mat-chip-row (removed)="removeFolderPathElement(keyword)">
                 {{ keyword }}
                 <button

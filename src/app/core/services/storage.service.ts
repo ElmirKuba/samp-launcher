@@ -7,7 +7,7 @@ import { IStorage } from '../interfaces/storage.interfaces';
   providedIn: 'root',
 })
 export class StorageService {
-  /** Путь до домашней директории приложения */
+  /** Путь до домашней директории пользователя MacOS */
   private homeDir: string | null = null;
   /** Имя пользователя MacOS */
   private userName: string | null = null;
@@ -89,30 +89,60 @@ export class StorageService {
   }
 
   /** Получает значение по ключу */
-  getValue(key: keyof IStorage): any {
+  public getValue(key: keyof IStorage): any {
     return this.configData[key];
   }
 
   /** Устанавливает значение по ключу */
-  setValue(key: keyof IStorage, value: any): void {
+  public setValue(key: keyof IStorage, value: any): void {
     this.configData[key] = value;
     this.saveConfig();
   }
 
   /** Удаляет значение по ключу */
-  deleteValue(key: keyof IStorage): void {
+  public deleteValue(key: keyof IStorage): void {
     delete this.configData[key];
     this.saveConfig();
   }
 
   /** Получает все данные из конфига */
-  getAllData(): IStorage {
+  public getAllData(): IStorage {
     return this.configData;
   }
 
   /** Устанавливает все данные конфига */
-  setAllData(data: IStorage): void {
+  public setAllData(data: IStorage): void {
     this.configData = data;
     this.saveConfig();
+  }
+
+  /** Путь до домашней директории пользователя MacOS */
+  public getHomeDir() {
+    return this.homeDir;
+  }
+
+  /** Имя пользователя MacOS */
+  public getUserName() {
+    return this.userName;
+  }
+
+  /** Путь до данных samp-launcher */
+  public getAppDataPath() {
+    return this.appDataPath;
+  }
+
+  /** Путь до основного файла настроек samp-launcher */
+  public getConfigPath() {
+    return this.configPath;
+  }
+
+  /** Шаблон OS для бутылки Crossover */
+  public getTemplateOSCrossover() {
+    return this.templateOSCrossover;
+  }
+
+  /** Описание для бутылки Crossover */
+  public getDescriptionOSCrossover() {
+    return this.descriptionOSCrossover;
   }
 }
