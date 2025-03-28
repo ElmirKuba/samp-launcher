@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ElectronService } from '../core/services/electron.service';
+import { FilesAngularService } from './files-check.service';
 
 /** Сервис по работе с Crossover */
 @Injectable()
@@ -14,7 +15,10 @@ export class CrossoverService {
   /** Путь к инструменту запуска приложения Windows в бутылке */
   crossoverCxStartExist = `${this.crossoverPath}/Contents/SharedSupport/CrossOver/bin/cxstart`;
 
-  constructor(private electronService: ElectronService) {}
+  constructor(
+    private electronService: ElectronService,
+    private filesAngularService: FilesAngularService
+  ) {}
 
   /** Получить поток состояния статуса работы Crossover */
   public getCrossoverStatusReady(): BehaviorSubject<boolean> {
@@ -54,5 +58,15 @@ export class CrossoverService {
     }
 
     return true;
+  }
+
+  /** Скачать и установить Crossover */
+  downloadCrossoverAndInstall(): void {
+    try {
+      // await this.filesAngularService.downloadFileWithProgress(url, savePath);
+      console.log('Скачивание завершено успешно.');
+    } catch (error) {
+      console.error('Ошибка при скачивании:', error);
+    }
   }
 }

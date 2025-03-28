@@ -5,12 +5,22 @@
     vertical-align: middle;
   }
 
-  .completed-icon {
+  &__completed-icon {
     color: green;
   }
 
-  .uncompleted-icon {
+  &__uncompleted-icon {
     color: red;
+  }
+
+  &__install-and-check {
+  }
+
+  &__button {
+  }
+
+  &__progress {
+    margin-top: 10px;
   }
 
   span {

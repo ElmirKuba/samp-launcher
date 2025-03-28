@@ -4,16 +4,45 @@
       <mat-list>
         @if (crossoverStatusReady) {
         <mat-list-item>
-          <mat-icon class="completed-icon">check_circle</mat-icon>
+          <mat-icon class="app-crossover__completed-icon"
+            >check_circle</mat-icon
+          >
           <span class="completed-text">Crossover готов к работе!</span>
         </mat-list-item>
         } @else {
         <mat-list-item>
-          <mat-icon class="uncompleted-icon">warning</mat-icon>
+          <mat-icon class="app-crossover__uncompleted-icon">warning</mat-icon>
           <span> Crossover не готов к работе, разберитесь с этим: </span>
         </mat-list-item>
 
-        <div>1234</div>
+        <div class="app-crossover__install-and-check">
+          @if (installationProgress === 0) {
+          <button
+            class="app-crossover__button"
+            mat-raised-button
+            color="primary"
+            (click)="installAndCheck()"
+          >
+            Установить и проверить снова
+          </button>
+          } @else if (installationProgress > 0) {
+          <mat-progress-bar
+            class="app-crossover__progress"
+            [mode]="modeProgress"
+            [value]="installationProgress"
+          ></mat-progress-bar>
+
+          @if (modeProgress === 'determinate') {
+          <div>Скачивание: {{ installationProgress }}%</div>
+          } @else {
+          <div>Скачивание завершено.</div>
+          <div>Распаковка Crossover.</div>
+          }
+          <!--  -->
+          }
+
+          <!-- <mat-progress-bar mode="indeterminate"></mat-progress-bar> -->
+        </div>
         }
       </mat-list>
     </mat-card-content>
