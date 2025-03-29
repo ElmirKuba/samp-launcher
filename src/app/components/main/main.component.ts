@@ -10,8 +10,6 @@ export class MainComponent implements OnInit {
   constructor(private storageService: StorageService) {}
 
   ngOnInit(): void {
-    console.log('MainComponent init');
-
     const storeTemp = this.storageService.getAllData();
 
     console.log('______________________________');

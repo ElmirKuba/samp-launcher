@@ -10,7 +10,7 @@
             <span>
               Укажите URL-адрес, с которого будут загружаться файлы GTA San
               Andreas MultiPlayer. Этот адрес должен быть действительным и
-              доступным. Так же по этому пути должен располагаться version.json.
+              доступным.
             </span>
           </mat-card-content>
         </mat-card>
@@ -63,9 +63,6 @@
               Укажите URL-адрес, с которого будет загружаться архив с Crossover
               для MacOS. Рекомендуется версия 24.0.5, на других версиях
               работоспособность не гарантирована!
-              <br />
-              После того как вы введете URL адрес, уберите курсор с поля ввода
-              для валидации ссылки и проверки наличия файла.
             </span>
           </mat-card-content>
         </mat-card>
@@ -217,10 +214,12 @@
             <mat-chip-grid
               #reactiveChipGrid
               aria-label="Enter reactive form keywords"
-              [formControl]="
-                settingsForm.controls['folderPathElementsOfGTASanAndreasFiles']
-              "
+              formControlName="folderPathElementsOfGTASanAndreasFiles"
             >
+              <!-- 
+            [formControl]="
+                settingsForm.controls['folderPathElementsOfGTASanAndreasFiles']
+              " -->
               @for (keyword of reactiveKeywordsPathGTASAMP(); track keyword) {
               <mat-chip-row (removed)="removeFolderPathElement(keyword)">
                 {{ keyword }}

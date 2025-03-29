@@ -1,6 +1,7 @@
-import { app, BrowserWindow, screen, ipcMain } from 'electron';
+import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
+import allIcpEvents from './helpers/icp-events';
 
 let win: BrowserWindow | null = null;
 const args = process.argv.slice(1),
@@ -24,15 +25,7 @@ function createWindow(): BrowserWindow {
 
   win.webContents.openDevTools();
 
-  ipcMain.handle('store-set', (event, key, value) => {
-    // @ts-ignore
-    store.set(key, value);
-  });
-
-  ipcMain.handle('store-get', (event, key) => {
-    // @ts-ignore
-    return store.get(key);
-  });
+  allIcpEvents();
 
   if (serve) {
     const debug = require('electron-debug');

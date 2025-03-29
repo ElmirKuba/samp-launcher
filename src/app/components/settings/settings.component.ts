@@ -9,10 +9,8 @@ import {
   FormArray,
   FormControl,
   FormGroup,
-  Validators,
 } from '@angular/forms';
 import { debounceTime } from 'rxjs';
-import { FilesAngularService } from '../../services/files-check.service';
 import { MatChipInputEvent } from '@angular/material/chips';
 
 /** Компонент настроек samp-launcher */
@@ -29,47 +27,18 @@ export class SettingsComponent implements OnInit {
   /** Форма компонента настроек samp-launcher */
   settingsForm = new FormGroup<Record<keyof IStorage, AbstractControl>>({
     /** URL загрузки файлов GTA San Andreas () */
-    downloadURLOfGTASanAndreasFiles: new FormControl<string | null>('', {
-      validators: [Validators.required],
-      // asyncValidators: [remoteSAMPFilesValidator(this.filesAngularService)],
-      updateOn: 'change',
-    }),
-    downloadURLOfCrossover: new FormControl<string | null>('', {
-      validators: [Validators.required],
-      // asyncValidators: [remoteFileValidator(this.filesAngularService)],
-      updateOn: 'change',
-    }),
-    nickNameSAMP: new FormControl<string | null>('', {
-      validators: [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9_]{1,20}$/),
-      ],
-      updateOn: 'change',
-    }),
-    nameBottleCrossover: new FormControl<string | null>('', {
-      validators: [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z_]{1,20}$/),
-      ],
-      updateOn: 'change',
-    }),
-    folderPathElementsOfGTASanAndreasFiles: new FormControl([], {
-      validators: [Validators.required],
-      updateOn: 'change',
-    }),
+    downloadURLOfGTASanAndreasFiles: new FormControl<string | null>('', {}),
+    downloadURLOfCrossover: new FormControl<string | null>('', {}),
+    nickNameSAMP: new FormControl<string | null>('', {}),
+    nameBottleCrossover: new FormControl<string | null>('', {}),
+    folderPathElementsOfGTASanAndreasFiles: new FormControl([], {}),
     serverAdresses: new FormArray([]),
   });
 
-  constructor(
-    private storageService: StorageService,
-    private filesAngularService: FilesAngularService
-  ) {}
+  constructor(private storageService: StorageService) {}
 
   ngOnInit(): void {
-    console.log('SettingsComponent init');
     const configAppAllData = this.storageService.getAllData();
-
-    console.log('::storageService::', configAppAllData.serverAdresses);
 
     this.settingsForm.patchValue({
       downloadURLOfGTASanAndreasFiles:
@@ -79,9 +48,9 @@ export class SettingsComponent implements OnInit {
       nameBottleCrossover: configAppAllData.nameBottleCrossover,
     });
 
-    this.reactiveKeywordsPathGTASAMP.set(
-      configAppAllData.folderPathElementsOfGTASanAndreasFiles
-    );
+    this.reactiveKeywordsPathGTASAMP.set([
+      ...configAppAllData.folderPathElementsOfGTASanAndreasFiles,
+    ]);
 
     if (configAppAllData.serverAdresses.length > 0) {
       for (const serverAdress of configAppAllData.serverAdresses) {
@@ -91,12 +60,6 @@ export class SettingsComponent implements OnInit {
 
     this.settingsForm.valueChanges.pipe(debounceTime(1000)).subscribe({
       next: (formDatas) => {
-        // if (!this.settingsForm.valid) {
-        //   return;
-        // }
-
-        console.log('::formDatas::', formDatas);
-
         this.storageService.setAllData({
           downloadURLOfGTASanAndreasFiles:
             formDatas.downloadURLOfGTASanAndreasFiles,
@@ -126,14 +89,8 @@ export class SettingsComponent implements OnInit {
   /** Создает FormGroup для одного сервера */
   private createServerGroup(server?: IServerAdresses): FormGroup {
     return new FormGroup({
-      ip: new FormControl(server?.ip || '', [
-        Validators.required,
-        Validators.pattern(/^(\d{1,3}\.){3}\d{1,3}$/),
-      ]),
-      port: new FormControl(server?.port || '', [
-        Validators.required,
-        Validators.pattern(/^\d{1,5}$/),
-      ]),
+      ip: new FormControl(server?.ip || '', []),
+      port: new FormControl(server?.port || '', []),
     });
   }
 
@@ -171,6 +128,11 @@ export class SettingsComponent implements OnInit {
 
       keywords.splice(index, 1);
       return [...keywords];
+    });
+
+    this.settingsForm.patchValue({
+      folderPathElementsOfGTASanAndreasFiles:
+        this.reactiveKeywordsPathGTASAMP(),
     });
   }
 }

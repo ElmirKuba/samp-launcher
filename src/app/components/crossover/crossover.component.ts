@@ -3,7 +3,6 @@ import { CrossoverService } from '../../services/crossover.service';
 import { Subscription } from 'rxjs';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { FilesAngularService } from '../../services/files-check.service';
-import { IDownloadProgress } from '../../interfaces/files.interfaces';
 
 /** Компонент по работе с Crossover */
 @Component({
@@ -33,8 +32,6 @@ export class CrossoverComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log('CrossoverComponent init');
-
     void this.crossoverService.checkCrossoverStatusReady();
 
     if (this.crossoverStatusSubscription !== null) {
@@ -59,37 +56,30 @@ export class CrossoverComponent implements OnInit, OnDestroy {
       this.progressDownloadSubscription = null;
     }
 
-    this.progressDownloadSubscription = this.filesAngularService
-      .getDownloadProgress()
-      .subscribe({
-        next: (progress: IDownloadProgress | null) => {
-          if (progress) {
-            this.installationProgress = Math.round(
-              progress.progressDecimal * 100
-            );
+    // this.progressDownloadSubscription = this.filesAngularService
+    //   .getDownloadProgress()
+    //   .subscribe({
+    //     next: (progress: IDownloadProgress | null) => {
+    //       if (progress) {
+    //         this.installationProgress = Math.round(
+    //           progress.progressDecimal * 100
+    //         );
 
-            this.loadedProgress = progress.loaded;
-            this.totalProgress = progress.total;
+    //         this.loadedProgress = progress.loaded;
+    //         this.totalProgress = progress.total;
 
-            console.log(
-              'getDownloadProgress subscribe::?',
-              Boolean(progress),
-              progress,
-              `${this.installationProgress}%`
-            );
+    //         if (this.installationProgress >= 100) {
+    //           this.modeProgress = 'indeterminate';
 
-            if (this.installationProgress >= 100) {
-              this.modeProgress = 'indeterminate';
+    //           void this.crossoverService.checkCrossoverStatusReady();
+    //         }
+    //       }
+    //     },
 
-              void this.crossoverService.checkCrossoverStatusReady();
-            }
-          }
-        },
-
-        error: (err) => {
-          console.error('Download error:', err);
-        },
-      });
+    //     error: (err) => {
+    //       console.error('Download error:', err);
+    //     },
+    //   });
   }
 
   ngOnDestroy(): void {
@@ -105,17 +95,15 @@ export class CrossoverComponent implements OnInit, OnDestroy {
   }
 
   /** Установка Crossover и проверка результата */
-  async installAndCheck() {
-    const statusDownloadStated =
-      await this.crossoverService.downloadCrossoverAndInstall();
-
-    console.log('statusDownloadStated', statusDownloadStated);
+  installAndCheck(): void {
+    // const statusDownloadStated =
+    this.crossoverService.downloadCrossoverAndInstall();
+    void this.crossoverService.checkCrossoverStatusReady();
   }
 
   /** Отмена загрузки */
   cancelDownload() {
-    this.filesAngularService.cancelDownload();
-
+    //   this.filesAngularService.cancelDownload();
     void this.crossoverService.checkCrossoverStatusReady();
   }
 }

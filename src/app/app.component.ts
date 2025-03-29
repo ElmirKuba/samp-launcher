@@ -11,15 +11,12 @@ export class AppComponent implements OnInit {
   activeTabIndex = 0;
 
   constructor(private electronService: ElectronService) {
-    console.log('AppComponent init');
     console.log('APP_CONFIG', APP_CONFIG);
     if (electronService.isElectron) {
       console.log(process.env);
       console.log('Run in electron');
-      console.log('Electron ipcRenderer', this.electronService.ipcRenderer);
-      console.log('NodeJS childProcess', this.electronService.childProcess);
     } else {
-      console.log('Run in browser');
+      throw new Error('Frontend не приспособлен работать не через Electron!');
     }
   }
 

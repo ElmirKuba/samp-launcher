@@ -46,14 +46,12 @@ export class StorageService {
   /** Инициализация хранилища настроек приложения */
   private initStorage() {
     this.homeDir = this.electronService.process.env.HOME as string;
-
     this.userName = this.electronService.process.env.USER as string;
-
     this.appDataPath = `${this.homeDir}/samp-launcher`;
-    this.configPath = `${this.appDataPath}/config.json`;
+    this.configPath = `${this.getAppDataPath()}/config.json`;
 
-    if (!this.electronService.fs.existsSync(this.appDataPath)) {
-      this.electronService.fs.mkdirSync(this.appDataPath, {
+    if (!this.electronService.fs.existsSync(this.getAppDataPath() as string)) {
+      this.electronService.fs.mkdirSync(this.getAppDataPath() as string, {
         recursive: true,
       });
     }
@@ -63,23 +61,16 @@ export class StorageService {
 
   /** Загружает данные из config.json в память */
   private loadConfig() {
-    if (this.electronService.fs.existsSync(this.configPath as string)) {
+    if (this.electronService.fs.existsSync(this.getConfigPath() as string)) {
       /** Сырые данные из config.json */
       const jsonData = this.electronService.fs.readFileSync(
-        this.configPath as string,
+        this.getConfigPath() as string,
         'utf-8'
       );
 
       this.configData = JSON.parse(jsonData) as IStorage;
     } else {
-      this.setAllData({
-        downloadURLOfGTASanAndreasFiles: null,
-        downloadURLOfCrossover: null,
-        nickNameSAMP: null,
-        nameBottleCrossover: null,
-        folderPathElementsOfGTASanAndreasFiles: [],
-        serverAdresses: [],
-      });
+      this.saveConfig();
     }
   }
 
@@ -88,7 +79,7 @@ export class StorageService {
     const jsonData = JSON.stringify(this.configData, null, 2);
 
     this.electronService.fs.writeFileSync(
-      this.configPath as string,
+      this.getConfigPath() as string,
       jsonData,
       'utf-8'
     );
