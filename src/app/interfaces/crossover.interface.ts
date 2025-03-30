@@ -142,8 +142,17 @@ export interface IBottleValid {
 }
 
 /** Универсальные статусы экспорта */
-export enum CrossoverMaintenanceStatus {}
-// /** Ожидает экспортирования */
-// notExported = 0,
-// /** Экспортировано */
-// exported = 1,
+export enum CrossoverMaintenanceStatus {
+  /** Crossover успешно обслужен */
+  SUCCESS = 'SUCCESS',
+  /** Бутылка Crossover не валидна */
+  BOTTLE_INVALID = 'BOTTLE_INVALID',
+  /** Бутылка Crossover в процессе создания */
+  BOTTLE_PROCESS_CREATED = 'BOTTLE_PROCESS_CREATED',
+  /** Бутылка в Crossover не была создана */
+  BOTTLE_PROCESS_FAIL = 'BOTTLE_PROCESS_FAIL',
+  /** Бутылка в Crossover готова к технической настройке */
+  BOTTLE_READY_SETTINGS = 'BOTTLE_READY_SETTINGS',
+  /** Статус обслуживания Crossover не известен */
+  STATUS_UNDEFINED = 'STATUS_UNDEFINED',
+}

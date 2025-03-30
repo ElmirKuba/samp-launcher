@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 @Injectable()
 export class InstallCrossoverService {
   /** Статус готовности Crossover к работе */
-  private crossoverStatusReady = new BehaviorSubject(false);
+  private crossoverStatusInstall = new BehaviorSubject(false);
 
   constructor(
     private electronService: ElectronService,
@@ -19,17 +19,17 @@ export class InstallCrossoverService {
   ) {}
 
   /** Получить поток состояния статуса работы Crossover */
-  public getCrossoverStatusReady(): BehaviorSubject<boolean> {
-    return this.crossoverStatusReady;
+  public getCrossoverStatusInstall(): BehaviorSubject<boolean> {
+    return this.crossoverStatusInstall;
   }
 
   /** Установить новый статус работы Crossover */
-  public setCrossoverStatusReady(newStatus: boolean): void {
-    this.crossoverStatusReady.next(newStatus);
+  public setCrossoverStatusInstall(newStatus: boolean): void {
+    this.crossoverStatusInstall.next(newStatus);
   }
 
   /** Запустить проверку работоспособности Crossover */
-  public async checkCrossoverStatusReady(): Promise<void> {
+  public async checkcrossoverStatusInstall(): Promise<void> {
     /** Статус установленности Crossover */
     let status = this.checkCrossoverInstallation();
 
@@ -59,12 +59,12 @@ export class InstallCrossoverService {
 
     if (status) {
       this.toastr.success(
-        'Crossover готов к работе!',
+        'Crossover готов к обслуживанию!',
         'Хорошие новости с Crossover'
       );
     }
 
-    this.setCrossoverStatusReady(status);
+    this.setCrossoverStatusInstall(status);
   }
 
   /** Проверка установленности Crossover */

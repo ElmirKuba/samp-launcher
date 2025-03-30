@@ -26,7 +26,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { InstallCrossoverComponent } from './components/install-crossover/install-crossover.component';
 import { InstallCrossoverService } from './services/install-crossover.service';
 import { ToastrModule } from 'ngx-toastr';
-import { WorkingWithCrossoverComponent } from './components/maintenance-with-crossover/maintenance-crossover.component';
+import { WorkingWithMaintenanceComponent } from './components/maintenance-with-crossover/maintenance-crossover.component';
 import { MaintenanceCrossoverService } from './services/maintenance-crossover.service';
 
 @NgModule({
@@ -35,7 +35,7 @@ import { MaintenanceCrossoverService } from './services/maintenance-crossover.se
     SettingsComponent,
     MainComponent,
     InstallCrossoverComponent,
-    WorkingWithCrossoverComponent,
+    WorkingWithMaintenanceComponent,
   ],
   imports: [
     BrowserModule,

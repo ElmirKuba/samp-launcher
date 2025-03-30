@@ -32,7 +32,7 @@ export class StorageService {
   /** Путь к Crossover */
   private crossoverPath = `${this.getAppDataBinaryFiles()}/CrossOver.app`;
   /** Путь к инструменту создания бутылок Crossover */
-  private crossoverCxBottleExist = `${this.getCrossoverPath()}/Contents/SharedSupport/CrossOver/CrossOver-Hosted Application/cxbottle`;
+  private crossoverCxBottleExist = `${this.getCrossoverPath()}/Contents/SharedSupport/CrossOver/bin/cxbottle`;
   /** Путь к инструменту запуска приложения Windows в бутылке */
   private crossoverCxStartExist = `${this.getCrossoverPath()}/Contents/SharedSupport/CrossOver/bin/cxstart`;
   /** Основной конфиг Crossover */

@@ -17,13 +17,13 @@ import { StorageService } from '../../core/services/storage.service';
 })
 export class InstallCrossoverComponent implements OnInit, OnDestroy {
   /** Подписант статуса работы Crossover */
-  crossoverStatusSubscription: Subscription | null = null;
+  crossoverInstalledSubscription: Subscription | null = null;
   /** Подписант статуса загрузки Crossover */
   progressDownloadSubscription: Subscription | null = null;
   /** Процесс распаковки Crossover */
   processExtractCrossover: Subscription | null = null;
   /** Результат подписи статуса работы Crossover */
-  crossoverStatusReady!: boolean;
+  crossoverStatusInstall!: boolean;
   /** Значение прогресса (0–100) */
   installationProgress: number = 0;
   /** Сколько скачано в байтах уже */
@@ -45,20 +45,20 @@ export class InstallCrossoverComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    void this.installCrossoverService.checkCrossoverStatusReady();
+    void this.installCrossoverService.checkcrossoverStatusInstall();
 
-    if (this.crossoverStatusSubscription !== null) {
-      this.crossoverStatusSubscription.unsubscribe();
-      this.crossoverStatusSubscription = null;
+    if (this.crossoverInstalledSubscription !== null) {
+      this.crossoverInstalledSubscription.unsubscribe();
+      this.crossoverInstalledSubscription = null;
     }
 
-    this.crossoverStatusSubscription = this.installCrossoverService
-      .getCrossoverStatusReady()
+    this.crossoverInstalledSubscription = this.installCrossoverService
+      .getCrossoverStatusInstall()
       .subscribe({
         next: (valueStatus) => {
-          this.crossoverStatusReady = valueStatus;
+          this.crossoverStatusInstall = valueStatus;
 
-          if (this.crossoverStatusReady) {
+          if (this.crossoverStatusInstall) {
             this.modeProgress = 'determinate';
           }
         },
@@ -107,7 +107,7 @@ export class InstallCrossoverComponent implements OnInit, OnDestroy {
 
         this.modeProgress = 'indeterminate';
 
-        void this.installCrossoverService.checkCrossoverStatusReady();
+        void this.installCrossoverService.checkcrossoverStatusInstall();
       }
     );
 
@@ -120,15 +120,15 @@ export class InstallCrossoverComponent implements OnInit, OnDestroy {
           'Ошибка работы с Crossover'
         );
 
-        void this.installCrossoverService.checkCrossoverStatusReady();
+        void this.installCrossoverService.checkcrossoverStatusInstall();
       }
     );
   }
 
   ngOnDestroy(): void {
-    if (this.crossoverStatusSubscription !== null) {
-      this.crossoverStatusSubscription.unsubscribe();
-      this.crossoverStatusSubscription = null;
+    if (this.crossoverInstalledSubscription !== null) {
+      this.crossoverInstalledSubscription.unsubscribe();
+      this.crossoverInstalledSubscription = null;
     }
 
     if (this.progressDownloadSubscription !== null) {
