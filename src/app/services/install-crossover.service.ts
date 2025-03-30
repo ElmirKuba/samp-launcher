@@ -29,7 +29,7 @@ export class InstallCrossoverService {
   }
 
   /** Запустить проверку работоспособности Crossover */
-  public checkCrossoverStatusReady(): void {
+  public async checkCrossoverStatusReady(): Promise<void> {
     /** Статус установленности Crossover */
     let status = this.checkCrossoverInstallation();
 
@@ -48,7 +48,7 @@ export class InstallCrossoverService {
           'Хорошие новости с Crossover'
         );
 
-        status = this.unpackCrossoverFile();
+        status = await this.unpackCrossoverFile();
       } else {
         this.toastr.error(
           'Crossover не скачан! Скачайте его!',
@@ -161,7 +161,7 @@ export class InstallCrossoverService {
   }
 
   /** Перемещение файла Crossover */
-  private unpackCrossoverFile(): boolean {
+  private async unpackCrossoverFile(): Promise<boolean> {
     this.filesAngularService.removeFileForPath(
       this.storageService.getCrossoverPath()
     );
@@ -172,7 +172,7 @@ export class InstallCrossoverService {
     /** Путь к папке с приложениями MacOS */
     const appDataBinaryFiles = this.storageService.getAppDataBinaryFiles();
 
-    void this.filesAngularService.extractArchive(
+    await this.filesAngularService.extractArchive(
       pathForFileCrossover as string,
       appDataBinaryFiles as string
     );
