@@ -15,6 +15,7 @@ export class WorkingWithMaintenanceComponent implements OnInit, OnDestroy {
   /** Статус обслуживания Crossover к работе */
   protected crossoverStatusMaintenance: CrossoverMaintenanceStatus =
     CrossoverMaintenanceStatus.STATUS_UNDEFINED;
+  /** Универсальные статусы обслуживания Crossover */
   protected enumCrossoverMaintenanceStatus = CrossoverMaintenanceStatus;
   /** Наименование бутылки Crossover */
   protected nameBottleCrossover: string | null = null;

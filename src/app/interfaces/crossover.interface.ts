@@ -141,7 +141,7 @@ export interface IBottleValid {
   desc: string;
 }
 
-/** Универсальные статусы экспорта */
+/** Универсальные статусы обслуживания Crossover */
 export enum CrossoverMaintenanceStatus {
   /** Crossover успешно обслужен */
   SUCCESS = 'SUCCESS',

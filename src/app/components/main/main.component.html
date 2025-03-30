@@ -7,6 +7,14 @@
       @if(crossoverStatusInstall) {
       <app-maintenance-crossover></app-maintenance-crossover>
       }
+      <!--  -->
+      @if (crossoverStatusMaintenance ===
+      enumCrossoverMaintenanceStatus.SUCCESS) {
+      <div>
+        Показываем следующий компонент только когда Crossover и бутылка
+        обслужены... (в разработке)
+      </div>
+      }
     </mat-card-content>
   </mat-card>
 </div>
