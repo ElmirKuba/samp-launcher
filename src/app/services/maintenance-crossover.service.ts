@@ -83,7 +83,25 @@ export class MaintenanceCrossoverService {
     this.setCrossoverStatusMaintenance(
       CrossoverMaintenanceStatus.BOTTLE_READY_SETTINGS
     );
-    // this.setCrossoverStatusMaintenance(CrossoverMaintenanceStatus.SUCCESS);
+
+    /** Путь до бутылки */
+    const bottlePath = this.electronService.path.join(
+      bottleDir,
+      nameBottleCrossover
+    );
+
+    /** Путь до файла системного редактора реестра */
+    const systemRegPath = this.electronService.path.join(
+      bottlePath,
+      'system.reg'
+    );
+
+    this.removeRegistryBlock(
+      systemRegPath,
+      this.storageService.getCrossoverRegeditHeaderForRemoveRegeditBlock()
+    );
+
+    this.setCrossoverStatusMaintenance(CrossoverMaintenanceStatus.SUCCESS);
   }
 
   /** Прочитать plist файл */
@@ -338,6 +356,49 @@ export class MaintenanceCrossoverService {
     }
   }
 
+  /** Удаляет блок по названию из файла реестра Windows внутри бутылки Crossover */
+  removeRegistryBlock(filePath: string, blockHeader: string) {
+    /** Прочитанный файл */
+    const content = this.electronService.fs.readFileSync(filePath, 'utf8');
+    // /** Разбили на массив строк */
+    const lines = content.split('\n');
+
+    let startIndex = -1;
+    let endIndex = -1;
+
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].trim().startsWith(`[${blockHeader}]`)) {
+        startIndex = i;
+        break;
+      }
+    }
+
+    if (startIndex === -1) {
+      // (`Блок [${blockHeader}] не найден.`);
+      return;
+    }
+
+    for (let i = startIndex + 1; i < lines.length; i++) {
+      const trimmedLine = lines[i].trim();
+      if (trimmedLine === '' || trimmedLine.startsWith('[')) {
+        endIndex = i;
+        break;
+      }
+    }
+
+    // endIndex++;
+
+    if (endIndex === -1) {
+      endIndex = lines.length;
+    }
+
+    lines.splice(startIndex, endIndex - startIndex);
+
+    this.electronService.fs.writeFileSync(filePath, lines.join('\n'), 'utf8');
+
+    // (`Блок [${blockHeader}] успешно удалён.`);
+  }
+
   /** Создать бутылку в Crossover */
   public async attemptCreateBottleCrossover() {
     this.setCrossoverStatusMaintenance(
@@ -382,8 +443,6 @@ export class MaintenanceCrossoverService {
       return;
     }
 
-    this.setCrossoverStatusMaintenance(
-      CrossoverMaintenanceStatus.BOTTLE_READY_SETTINGS
-    );
+    await this.checkcrossoverStatusInstall();
   }
 }

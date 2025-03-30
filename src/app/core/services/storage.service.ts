@@ -37,6 +37,9 @@ export class StorageService {
   private crossoverCxStartExist = `${this.getCrossoverPath()}/Contents/SharedSupport/CrossOver/bin/cxstart`;
   /** Основной конфиг Crossover */
   private crossoverMainConfig = `/Users/${this.getUserName()}/Library/Preferences/com.codeweavers.CrossOver.plist`;
+  /** Crossover`ный заголовок в реестре Windows внутри бутылки для удаления во время обслуживания бутылки */
+  private crossoverRegeditHeaderForRemoveRegeditBlock: string =
+    'Software\\\\CodeWeavers\\\\CrossOver\\\\cxoffice';
   /** Объект для хранения данных из config.json */
   private configData: IStorage = {
     downloadURLOfGTASanAndreasFiles: null,
@@ -203,5 +206,10 @@ export class StorageService {
   /** Основной конфиг Crossover */
   public getCrossoverMainConfig() {
     return this.crossoverMainConfig;
+  }
+
+  /** Crossover`ный заголовок в реестре Windows внутри бутылки для удаления во время обслуживания бутылки */
+  public getCrossoverRegeditHeaderForRemoveRegeditBlock() {
+    return this.crossoverRegeditHeaderForRemoveRegeditBlock;
   }
 }
