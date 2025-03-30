@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { StorageService } from '../../core/services/storage.service';
 import { Subscription } from 'rxjs';
-import { ElectronService } from '../../core/services/electron.service';
-import { CrossoverService } from '../../services/crossover.service';
+import { InstallCrossoverService } from '../../services/install-crossover.service';
 
 @Component({
   selector: 'app-main',
@@ -17,7 +16,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   constructor(
     private storageService: StorageService,
-    private crossoverService: CrossoverService
+    private installCrossoverService: InstallCrossoverService
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +52,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.crossoverStatusSubscription = null;
     }
 
-    this.crossoverStatusSubscription = this.crossoverService
+    this.crossoverStatusSubscription = this.installCrossoverService
       .getCrossoverStatusReady()
       .subscribe({
         next: (valueStatus) => {

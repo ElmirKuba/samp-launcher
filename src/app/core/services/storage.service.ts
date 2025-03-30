@@ -28,7 +28,7 @@ export class StorageService {
   /** Имя архива файла Crossover или имя приложения Crossover */
   private crossoverNameFile: string | null = null;
   /** Путь до бутылок */
-  private crossoverBottlesPath = `/Users/elmirkuba/Library/Application Support/CrossOver/Bottles`;
+  private crossoverBottlesPath = `/Users/${this.getUserName()}/Library/Application Support/CrossOver/Bottles`;
   /** Путь к Crossover */
   private crossoverPath = `${this.getAppDataBinaryFiles()}/CrossOver.app`;
   /** Путь к инструменту создания бутылок Crossover */
@@ -186,5 +186,15 @@ export class StorageService {
   /** Путь к инструменту запуска приложения Windows в бутылке */
   public getCrossoverCxStartExist() {
     return this.crossoverCxStartExist;
+  }
+
+  /** Путь до бутылок */
+  public getCrossoverBottlesPath() {
+    return this.crossoverBottlesPath;
+  }
+
+  /** Установить путь до бутылок */
+  public setCrossoverBottlesPath(newPath: string) {
+    this.crossoverBottlesPath = newPath;
   }
 }

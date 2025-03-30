@@ -1,18 +1,18 @@
-<div class="app-crossover">
+<div class="app-install-crossover">
   <mat-card>
     <mat-card-content>
       <mat-list>
         @if (crossoverStatusReady) {
         <mat-list-item>
-          <mat-icon class="app-crossover__completed-icon"
+          <mat-icon class="app-install-crossover__completed-icon"
             >check_circle</mat-icon
           >
-          <span class="completed-text">Crossover готов к работе!</span>
+          <span class="completed-text">Crossover обслужен!</span>
         </mat-list-item>
         } @else {
         <mat-list-item>
           <mat-icon class="app-crossover__uncompleted-icon">warning</mat-icon>
-          <span> Crossover не готов к работе, разберитесь с этим: </span>
+          <span> Что-то случилось с Crossover, разберитесь с этим: </span>
         </mat-list-item>
 
         <div class="app-crossover__install-and-check">

@@ -1,5 +1,5 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { CrossoverService } from '../../services/crossover.service';
+import { InstallCrossoverService } from '../../services/install-crossover.service';
 import { Subscription } from 'rxjs';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { FilesAngularService } from '../../services/files-check.service';
@@ -9,13 +9,13 @@ import { IPC_ELECTRON_IDENTIFIERS } from '../../../../app/helpers/ipc-identifier
 import { ToastrService } from 'ngx-toastr';
 import { StorageService } from '../../core/services/storage.service';
 
-/** Компонент по работе с Crossover */
+/** Компонент по обслуживанию Crossover */
 @Component({
-  selector: 'app-crossover',
-  templateUrl: './crossover.component.html',
-  styleUrl: './crossover.component.scss',
+  selector: 'app-install-crossover',
+  templateUrl: './install-crossover.component.html',
+  styleUrl: './install-crossover.component.scss',
 })
-export class CrossoverComponent implements OnInit, OnDestroy {
+export class InstallCrossoverComponent implements OnInit, OnDestroy {
   /** Подписант статуса работы Crossover */
   crossoverStatusSubscription: Subscription | null = null;
   /** Подписант статуса работы Crossover */
@@ -36,7 +36,7 @@ export class CrossoverComponent implements OnInit, OnDestroy {
   extractCrossover: string | null = null;
 
   constructor(
-    private crossoverService: CrossoverService,
+    private installCrossoverService: InstallCrossoverService,
     private filesAngularService: FilesAngularService,
     private zone: NgZone,
     private electronService: ElectronService,
@@ -45,14 +45,14 @@ export class CrossoverComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    void this.crossoverService.checkCrossoverStatusReady();
+    void this.installCrossoverService.checkCrossoverStatusReady();
 
     if (this.crossoverStatusSubscription !== null) {
       this.crossoverStatusSubscription.unsubscribe();
       this.crossoverStatusSubscription = null;
     }
 
-    this.crossoverStatusSubscription = this.crossoverService
+    this.crossoverStatusSubscription = this.installCrossoverService
       .getCrossoverStatusReady()
       .subscribe({
         next: (valueStatus) => {
@@ -107,7 +107,7 @@ export class CrossoverComponent implements OnInit, OnDestroy {
 
         this.modeProgress = 'indeterminate';
 
-        void this.crossoverService.checkCrossoverStatusReady();
+        void this.installCrossoverService.checkCrossoverStatusReady();
       }
     );
 
@@ -120,7 +120,7 @@ export class CrossoverComponent implements OnInit, OnDestroy {
           'Ошибка работы с Crossover'
         );
 
-        void this.crossoverService.checkCrossoverStatusReady();
+        void this.installCrossoverService.checkCrossoverStatusReady();
       }
     );
   }
@@ -144,7 +144,7 @@ export class CrossoverComponent implements OnInit, OnDestroy {
 
   /** Установка Crossover и проверка результата */
   async installAndCheck(): Promise<void> {
-    await this.crossoverService.downloadCrossoverAndInstall();
+    await this.installCrossoverService.downloadCrossoverAndInstall();
   }
 
   /** Отмена загрузки */

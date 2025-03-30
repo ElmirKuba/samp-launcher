@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 
 /** Сервис по работе с Crossover */
 @Injectable()
-export class CrossoverService {
+export class InstallCrossoverService {
   /** Статус готовности Crossover к работе */
   private crossoverStatusReady = new BehaviorSubject(false);
 

@@ -1,11 +1,11 @@
 <div class="app-main">
   <mat-card appearance="outlined">
-    <mat-card-content>
-      <app-crossover></app-crossover>
+    <mat-card-content class="app-main__modules">
+      <app-install-crossover></app-install-crossover>
 
       <!-- Пока Crossover не готов, нет смысла что-то показывать другое -->
       @if(crossoverStatusReady) {
-      <div>1234</div>
+      <app-working-with-crossover></app-working-with-crossover>
       }
     </mat-card-content>
   </mat-card>

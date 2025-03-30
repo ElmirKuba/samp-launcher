@@ -23,16 +23,19 @@ import { FilesAngularService } from './services/files-check.service';
 import { AxiosAngularService } from './core/services/axios.service';
 import { MainComponent } from './components/main/main.component';
 import { MatChipsModule } from '@angular/material/chips';
-import { CrossoverComponent } from './components/crossover/crossover.component';
-import { CrossoverService } from './services/crossover.service';
+import { InstallCrossoverComponent } from './components/install-crossover/install-crossover.component';
+import { InstallCrossoverService } from './services/install-crossover.service';
 import { ToastrModule } from 'ngx-toastr';
+import { WorkingWithCrossoverComponent } from './components/working-with-crossover/working-with-crossover.component';
+import { WorkingWithCrossoverService } from './services/working-with-crossover.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     SettingsComponent,
     MainComponent,
-    CrossoverComponent,
+    InstallCrossoverComponent,
+    WorkingWithCrossoverComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,7 +78,8 @@ import { ToastrModule } from 'ngx-toastr';
     AxiosAngularService,
 
     FilesAngularService,
-    CrossoverService,
+    InstallCrossoverService,
+    WorkingWithCrossoverService,
   ],
   bootstrap: [AppComponent],
 })
