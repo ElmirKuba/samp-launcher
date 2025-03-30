@@ -27,7 +27,7 @@ import { InstallCrossoverComponent } from './components/install-crossover/instal
 import { InstallCrossoverService } from './services/install-crossover.service';
 import { ToastrModule } from 'ngx-toastr';
 import { WorkingWithCrossoverComponent } from './components/maintenance-with-crossover/maintenance-crossover.component';
-import { WorkingWithCrossoverService } from './services/maintenance-crossover.service';
+import { MaintenanceCrossoverService } from './services/maintenance-crossover.service';
 
 @NgModule({
   declarations: [
@@ -79,7 +79,7 @@ import { WorkingWithCrossoverService } from './services/maintenance-crossover.se
 
     FilesAngularService,
     InstallCrossoverService,
-    WorkingWithCrossoverService,
+    MaintenanceCrossoverService,
   ],
   bootstrap: [AppComponent],
 })

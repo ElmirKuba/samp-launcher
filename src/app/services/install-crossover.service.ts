@@ -69,25 +69,23 @@ export class InstallCrossoverService {
 
   /** Проверка установленности Crossover */
   private checkCrossoverInstallation(): boolean {
-    if (
-      !this.electronService.fs.existsSync(
-        this.storageService.getCrossoverPath()
-      )
-    ) {
+    const crossoverPath = this.storageService.getCrossoverPath();
+
+    if (!this.electronService.fs.existsSync(crossoverPath)) {
       return false;
     }
-    if (
-      !this.electronService.fs.existsSync(
-        this.storageService.getCrossoverCxBottleExist()
-      )
-    ) {
+
+    const crossoverCxBottleExist =
+      this.storageService.getCrossoverCxBottleExist();
+
+    if (!this.electronService.fs.existsSync(crossoverCxBottleExist)) {
       return false;
     }
-    if (
-      !this.electronService.fs.existsSync(
-        this.storageService.getCrossoverCxStartExist()
-      )
-    ) {
+
+    const crossoverCxStartExist =
+      this.storageService.getCrossoverCxStartExist();
+
+    if (!this.electronService.fs.existsSync(crossoverCxStartExist)) {
       return false;
     }
 

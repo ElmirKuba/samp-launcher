@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { WorkingWithCrossoverService } from '../../services/maintenance-crossover.service';
+import { MaintenanceCrossoverService } from '../../services/maintenance-crossover.service';
 
 @Component({
   selector: 'app-maintenance-crossover',
@@ -8,11 +8,11 @@ import { WorkingWithCrossoverService } from '../../services/maintenance-crossove
 })
 export class WorkingWithCrossoverComponent implements OnInit, OnDestroy {
   constructor(
-    private workingWithCrossoverService: WorkingWithCrossoverService
+    private MaintenanceCrossoverService: MaintenanceCrossoverService
   ) {}
 
   ngOnInit(): void {
-    this.workingWithCrossoverService.checkCrossoverStatusReady();
+    void this.MaintenanceCrossoverService.checkCrossoverStatusReady();
   }
 
   ngOnDestroy(): void {

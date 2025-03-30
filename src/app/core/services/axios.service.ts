@@ -13,7 +13,7 @@ export class AxiosAngularService {
    */
   async request<RequestResultData>(config: any) {
     if (!this.electronService.isElectron || !this.electronService.axios) {
-      console.error('Electron или Axios недоступны');
+      console.error('Electron или Axios недоступны'); // TODO: Избавиться от console.*
       throw new Error('Axios is not available in this environment');
     }
 
@@ -22,7 +22,7 @@ export class AxiosAngularService {
         await this.electronService.axios.request<RequestResultData>(config);
       return response;
     } catch (error: any) {
-      console.error('Ошибка выполнения запроса:', error.message);
+      console.error('Ошибка выполнения запроса:', error.message); // TODO: Избавиться от console.*
       throw error;
     }
   }
@@ -59,7 +59,7 @@ export class AxiosAngularService {
       );
       return response;
     } catch (error: any) {
-      console.error('Ошибка выполнения HEAD-запроса:', error.message);
+      console.error('Ошибка выполнения HEAD-запроса:', error.message); // TODO: Избавиться от console.*
       throw error;
     }
   }

@@ -18,7 +18,7 @@ import { StorageService } from '../../core/services/storage.service';
 export class InstallCrossoverComponent implements OnInit, OnDestroy {
   /** Подписант статуса работы Crossover */
   crossoverStatusSubscription: Subscription | null = null;
-  /** Подписант статуса работы Crossover */
+  /** Подписант статуса загрузки Crossover */
   progressDownloadSubscription: Subscription | null = null;
   /** Процесс распаковки Crossover */
   processExtractCrossover: Subscription | null = null;

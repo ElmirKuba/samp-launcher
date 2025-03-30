@@ -1,7 +1,7 @@
 /**
  * Интерфейс для хранения настроек CrossOver
  */
-export interface CrossOverPreferences {
+export interface ICrossOverPreferences {
   /** Развернута ли расширенная боковая панель представления Bottle */
   BottleViewSidebarAdvancedExpanded: boolean;
 
@@ -106,7 +106,7 @@ export interface CrossOverPreferences {
 }
 
 /** Данные от функции чтения plist файла по пути */
-export interface ReadPListFileResult<FileReaded = Object> {
+export interface IReadPListFileResult<FileReaded = Object> {
   /** Состояние ошибки при чтении plist файла */
   error: boolean;
   /** Результат чтения plist файла */
@@ -116,25 +116,15 @@ export interface ReadPListFileResult<FileReaded = Object> {
 }
 
 /** Результат записи plist файла по пути */
-export interface WritePListFileResult {
+export interface IWritePListFileResult {
   /** Успешно записано в plist файл по пути или нет */
   success: boolean;
   /** Информация о ошибке при записи plist файла */
   errorData?: Error | null;
 }
 
-/** Установочные константы скрипта */
-export interface Consts {
-  /** Наименование бутылки */
-  nameBottle: string;
-  /** Шаблон для новой бутылки */
-  template: string;
-  /** Описание новой бутылки */
-  description: string;
-}
-
 /** Данные от функции чтения plist файла по пути */
-export interface CreateBottleResult {
+export interface ICreateBottleResult {
   /** Состояние ошибки при создании бутылки */
   error: boolean;
   /** Результат создания бутылки */
@@ -142,3 +132,18 @@ export interface CreateBottleResult {
   /** Информация о ошибке при создании бутылки */
   errorData?: Error | null;
 }
+
+/** Описание валидности бутылки Crossover */
+export interface IBottleValid {
+  /** Статус валидности бутылки Crossover */
+  status: boolean;
+  /** Описание валидности бутылки Crossover */
+  desc: string;
+}
+
+/** Универсальные статусы экспорта */
+export enum CrossoverMaintenanceStatus {}
+// /** Ожидает экспортирования */
+// notExported = 0,
+// /** Экспортировано */
+// exported = 1,

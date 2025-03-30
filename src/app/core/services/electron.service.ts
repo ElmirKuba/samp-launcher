@@ -70,17 +70,6 @@ export class ElectronService {
       this.bplist = (window as any).require('bplist-parser');
 
       this.childProcess = (window as any).require('child_process');
-      this.childProcess.exec('node -v', (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.error(`stderr: ${stderr}`);
-          return;
-        }
-        console.log(`stdout:\n${stdout}`);
-      });
     }
   }
 
