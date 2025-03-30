@@ -11,28 +11,28 @@ export interface IDownloadProgress {
 /** Описание процесса загрузки */
 export interface IProcessDownloadFile {
   /** Сколько скачано */
-  loaded: 262144;
+  loaded: number;
   /** Сколько всего скачать  */
-  total: 527888;
+  total: number;
   /** Прогресс в десятой части */
-  progress: 0.4965901857969872;
+  progress: number;
   /** Сколько скачано */
-  bytes: 262144;
-  rate: undefined;
-  estimated: undefined;
+  bytes: number;
+  rate: unknown;
+  estimated: unknown;
   event: {
-    isTrusted: true;
+    isTrusted: boolean;
   };
-  lengthComputable: true;
+  lengthComputable: boolean;
   /** Загрузка в процессе */
-  download: true;
+  download: boolean;
 }
 
 /** Описаине результата скачивания */
 export interface IResultDownloadFile {
   /** Сколько скачано */
   byteLength: number;
-  detached: false;
+  detached: boolean;
   /** Сколько скачать всего */
   maxByteLength: number;
   resizable: boolean;

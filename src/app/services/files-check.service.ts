@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AxiosAngularService } from '../core/services/axios.service';
-import { IVersionFileGTASA } from '../interfaces/gta-sa.interfaces';
 import { ElectronService } from '../core/services/electron.service';
 import { BehaviorSubject } from 'rxjs';
 import { IDownloadProgress } from '../interfaces/files.interfaces';
+import { IPC_ELECTRON_IDENTIFIERS } from '../../../app/helpers/ipc-identifiers';
+import { StorageService } from '../core/services/storage.service';
+import { ToastrService } from 'ngx-toastr';
+// import { CrossoverService } from './crossover.service';
 
 /** Сервис для работы с файлами в лаунчере */
 @Injectable({
@@ -14,136 +16,139 @@ export class FilesAngularService {
   private downloadProgress = new BehaviorSubject<IDownloadProgress | null>(
     null
   );
-  /** Хранит контроллер для отмены запроса */
-  private abortController: AbortController | null = null;
+  /** BehaviorSubject для отслеживания распаковки Crossover */
+  private extractCrossover = new BehaviorSubject<string | null>(null);
 
   constructor(
-    private axiosService: AxiosAngularService,
-    private electronService: ElectronService
-  ) {}
+    private electronService: ElectronService,
+    private storageService: StorageService,
+    private toastrService: ToastrService // private crossoverService: CrossoverService
+  ) {
+    this.electronService.ipcRenderer.on(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadProgress,
+      (event, { loaded, total }) => {
+        const progressDecimal = total ? Math.floor((loaded / total) * 100) : 0;
 
-  /** Проверка файлов GTA-SA:MP по ссылке */
-  async checkRemoteSAMPFiles(url: string) {
-    // TODO: Сделать возможность изменения названия "version.json" динамично
-    /** URL адрес до файла version.json */
-    const versionUrl = `${url}version.json`;
-
-    try {
-      /** Результат работы метода get */
-      const response = await this.axiosService.get<IVersionFileGTASA>(
-        versionUrl
-      );
-      /** Файлы GTA SAMP */
-      const files = response.data.files;
-
-      const arrFiles = Object.entries(files).map(([key, value]) => ({
-        fileName: key,
-        ...value,
-      }));
-
-      if (arrFiles.length > 0) {
-        return true;
+        this.setDownloadProgress({ loaded, total, progressDecimal });
       }
-
-      return null;
-    } catch (error: any) {
-      console.error('Файл version.json не найден:', error.message);
-      return null;
-    }
+    );
   }
 
   /** Проверка доступности удаленного файла по URL */
-  checkRemoteFileFromURL(url: string) {
-    console.log('checkRemoteFileFromURL url', url);
-    // try {
-    //   await this.axiosService.head(url);
-    //   return true;
-    // } catch (error: any) {
-    //   return false;
-    // }
+  async checkRemoteFileFromURL(url: string): Promise<boolean> {
+    if (!this.electronService || !this.electronService.ipcRenderer) {
+      throw new Error('Electron и/или ipcRenderer не инициализирован(-ы)!');
+    }
+
+    const resultHead = await this.electronService.ipcRenderer.invoke(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronCheckRemoteFileFromURL,
+      { url }
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return resultHead.success;
   }
 
-  // /**
-  //  * Скачивает файл с указанного URL и сохраняет его по указанному пути,
-  //  * предоставляя информацию о прогрессе загрузки.
-  //  * @param url URL для скачивания файла
-  //  * @param savePath Путь для сохранения файла
-  //  */
-  // async downloadFileWithProgress(
-  //   url: string,
-  //   savePath: string,
-  //   nameFile: string = url.split('/')[url.split('/').length - 1]
-  // ): Promise<void> {
-  //   try {
-  //     this.abortController = new AbortController();
+  /**
+   * Скачивает файл с указанного URL и сохраняет его по указанному пути,
+   * предоставляя информацию о прогрессе загрузки.
+   * @param url URL для скачивания файла
+   * @param savePath Путь для сохранения файла
+   * @param fullPathWithName Путь для сохранения файла с учетом его наименования и расширения
+   * @param nameFile Наименование файла
+   */
+  async downloadFileWithProgress(
+    url: string,
+    savePath: string,
+    fullPathWithName: string,
+    nameFile: string = url.split('/')[url.split('/').length - 1]
+  ): Promise<void> {
+    try {
+      await this.electronService.ipcRenderer.invoke(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        IPC_ELECTRON_IDENTIFIERS.fileInteraction
+          .electronDownloadFileWithProgress,
+        { url, savePath, fullPathWithName, nameFile }
+      );
+    } catch (azaza) {
+      //
+    }
+  }
 
-  //     if (!this.electronService.fs.existsSync(savePath)) {
-  //       this.electronService.fs.mkdirSync(savePath, {
-  //         recursive: true,
-  //       });
-  //     }
+  /**
+   * Метод для отмены текущего процесса скачивания файла.
+   * Вызывается с фронтенда (например, по клику на кнопку "Отмена").
+   */
+  public async cancelDownload(): Promise<void> {
+    const pathForFileCrossover = this.storageService.getPathForFileCrossover();
 
-  //     /** Путь с учетом названия файла и его расширения для сохранения */
-  //     const pathForFile = this.electronService.path.resolve(savePath, nameFile);
+    const resultCancel = await this.electronService.ipcRenderer.invoke(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronCancelDownloadFile,
+      { pathForFileCrossover }
+    );
 
-  //     /** Выполняем запрос с помощью axios */
-  //     const response = await this.electronService.axios.get<
-  //       Buffer & IResultDownloadFile
-  //     >(url, {
-  //       responseType: 'arraybuffer',
-  //       signal: this.abortController.signal,
-  //       onDownloadProgress: (progressEvent: any) => {
-  //         const tempProgressEvent = progressEvent as IProcessDownloadFile;
-  //         const loaded = tempProgressEvent.loaded;
-  //         const total = tempProgressEvent.total || 0;
-  //         const progress = tempProgressEvent.progress;
+    this.setDownloadProgress({
+      loaded: 0,
+      total: 0,
+      progressDecimal: 0,
+    });
 
-  //         // this.setDownloadProgress({
-  //         //   loaded,
-  //         //   total,
-  //         //   progressDecimal: progress,
-  //         // });
-  //       },
-  //     });
+    if (resultCancel.success) {
+      this.toastrService.success(
+        'Отмена скачивания файла прошла успешно!',
+        'Хорошие новости'
+      );
+    } else {
+      this.toastrService.error(
+        'Отмена скачивания файла произошла с ошибкой!',
+        'Ошибка при отмене скачивания файла'
+      );
+    }
+  }
 
-  //     this.electronService.fs.writeFileSync(
-  //       pathForFile,
-  //       Buffer.from(response.data)
-  //     );
+  /** Распаковка архива с отслеживанием статуса и состояния */
+  async extractArchive(archivePath: string, outputDir: string) {
+    try {
+      if (!this.electronService.fs.existsSync(outputDir)) {
+        this.electronService.fs.mkdirSync(outputDir, {
+          recursive: true,
+        });
+      }
 
-  //     // this.setDownloadProgress({
-  //     //   loaded: response.data.byteLength,
-  //     //   total: response.data.maxByteLength,
-  //     //   progressDecimal: 1,
-  //     // });
-  //   } catch (error: any) {
-  //     if (error.name === 'CanceledError' || error.message === 'canceled') {
-  // ('Скачивание было отменено пользователем.');
-  //     } else {
-  //       console.error('Ошибка при скачивании файла:', error.message);
-  //     }
-  //   } finally {
-  //     this.abortController = null;
-  //   }
-  // }
+      await this.electronService.extract(archivePath, {
+        dir: outputDir,
+        onEntry: (entry) => {
+          this.setExtractCrossover(entry.fileName);
+        },
+      });
 
-  // /**
-  //  * Метод для отмены текущего процесса скачивания файла.
-  //  * Вызывается с фронтенда (например, по клику на кнопку "Отмена").
-  //  */
-  // public cancelDownload(): void {
-  //   if (this.abortController) {
-  //     this.abortController.abort();
+      this.setExtractCrossover(null);
 
-  //     this.abortController = null;
+      this.toastrService.success(
+        'Crossover успешно распакован',
+        'Хорошие новости'
+      );
+    } catch (err) {
+      this.setExtractCrossover(null);
 
-  //     // this.setDownloadProgress({
-  //     //   loaded: 0,
-  //     //   total: 0,
-  //     //   progressDecimal: 0,
-  //     // });
-  //   }
-  // }
+      this.toastrService.error(
+        'Ошибка при распаковке Crossover',
+        'Ошибка при работе с Crossover'
+      );
+    }
+  }
+
+  /** Удаление файла по пути */
+  public removeFileForPath(path: string) {
+    try {
+      if (this.electronService.fs.existsSync(path)) {
+        this.electronService.fs.unlinkSync(path);
+      }
+    } catch (error) {}
+  }
 
   /** Получить поток состояния статуса работы Crossover */
   public getDownloadProgress(): BehaviorSubject<IDownloadProgress | null> {
@@ -153,5 +158,15 @@ export class FilesAngularService {
   /** Установить новый статус работы Crossover */
   public setDownloadProgress(newStatus: IDownloadProgress): void {
     this.downloadProgress.next(newStatus);
+  }
+
+  /** Получить поток распаковки Crossover */
+  public getExtractCrossover(): BehaviorSubject<string | null> {
+    return this.extractCrossover;
+  }
+
+  /** Установить состояние потока расспаковки Crossover */
+  public setExtractCrossover(status: string | null) {
+    this.extractCrossover.next(status);
   }
 }

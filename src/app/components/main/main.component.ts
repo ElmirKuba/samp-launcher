@@ -1,13 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { StorageService } from '../../core/services/storage.service';
+import { Subscription } from 'rxjs';
+import { ElectronService } from '../../core/services/electron.service';
+import { CrossoverService } from '../../services/crossover.service';
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
-export class MainComponent implements OnInit {
-  constructor(private storageService: StorageService) {}
+export class MainComponent implements OnInit, OnDestroy {
+  /** Результат подписи статуса работы Crossover */
+  crossoverStatusReady!: boolean;
+  /** Подписант статуса работы Crossover */
+  crossoverStatusSubscription: Subscription | null = null;
+
+  constructor(
+    private storageService: StorageService,
+    private crossoverService: CrossoverService
+  ) {}
 
   ngOnInit(): void {
     const storeTemp = this.storageService.getAllData();
@@ -36,5 +47,25 @@ export class MainComponent implements OnInit {
         this.storageService.getDescriptionOSCrossover(),
     });
     console.log('______________________________');
+
+    if (this.crossoverStatusSubscription !== null) {
+      this.crossoverStatusSubscription.unsubscribe();
+      this.crossoverStatusSubscription = null;
+    }
+
+    this.crossoverStatusSubscription = this.crossoverService
+      .getCrossoverStatusReady()
+      .subscribe({
+        next: (valueStatus) => {
+          this.crossoverStatusReady = valueStatus;
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.crossoverStatusSubscription !== null) {
+      this.crossoverStatusSubscription.unsubscribe();
+      this.crossoverStatusSubscription = null;
+    }
   }
 }

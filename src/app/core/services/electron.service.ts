@@ -11,6 +11,7 @@ import https from 'https';
 import child_process from 'child_process';
 import util from 'util';
 import stream from 'stream';
+import extract from 'extract-zip';
 
 /**
  * Сервис для работы с API Electron и Node.js в Angular-приложении.
@@ -45,6 +46,8 @@ export class ElectronService {
   util!: typeof util;
   /** stream */
   stream!: typeof stream;
+  /** extract */
+  extract!: typeof extract;
 
   constructor() {
     if (this.isElectron) {
@@ -60,6 +63,7 @@ export class ElectronService {
       this.child_process = (window as any).require('child_process');
       this.util = (window as any).require('util');
       this.stream = (window as any).require('stream');
+      this.extract = (window as any).require('extract-zip');
 
       this.childProcess = (window as any).require('child_process');
       this.childProcess.exec('node -v', (error, stdout, stderr) => {

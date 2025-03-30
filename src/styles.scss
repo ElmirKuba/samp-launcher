@@ -1,3 +1,5 @@
+@import url(./../node_modules/ngx-toastr/toastr.css);
+
 :root {
   box-sizing: border-box;
 }
@@ -5,4 +7,8 @@
 html,
 body {
   height: 98.7vh;
+}
+
+.ngx-toastr {
+  // TODO: Установить шрифт для уведомлений
 }

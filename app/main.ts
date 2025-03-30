@@ -25,7 +25,7 @@ function createWindow(): BrowserWindow {
 
   win.webContents.openDevTools();
 
-  allIcpEvents();
+  allIcpEvents(win);
 
   if (serve) {
     const debug = require('electron-debug');

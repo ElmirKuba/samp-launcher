@@ -8,15 +8,17 @@ import { IStorage } from '../interfaces/storage.interfaces';
 })
 export class StorageService {
   /** Путь до домашней директории пользователя MacOS */
-  private homeDir: string | null = null;
+  private homeDir: string | null = this.electronService.process.env
+    .HOME as string;
   /** Имя пользователя MacOS */
-  private userName: string | null = null;
-  /** Путь к папке с приложениями MacOS */
-  private applicationDir: string = '/Applications';
+  private userName: string | null = this.electronService.process.env
+    .USER as string;
   /** Путь до данных samp-launcher */
-  private appDataPath: string | null = null;
+  private appDataPath: string | null = `${this.homeDir}/samp-launcher`;
+  /** Бинарные файлы используемые лаунчером */
+  private appDataBinaryFiles: string | null = `${this.getAppDataPath()}/bin`;
   /** Путь до основного файла настроек samp-launcher */
-  private configPath: string | null = null;
+  private configPath: string | null = `${this.getAppDataPath()}/config.json`;
   /** Шаблон OS для бутылки Crossover */
   private templateOSCrossover: string | null = 'win7';
   /** Описание для бутылки Crossover */
@@ -25,6 +27,14 @@ export class StorageService {
   private pathForFileCrossover: string | null = null;
   /** Имя архива файла Crossover или имя приложения Crossover */
   private crossoverNameFile: string | null = null;
+  /** Путь до бутылок */
+  private crossoverBottlesPath = `/Users/elmirkuba/Library/Application Support/CrossOver/Bottles`;
+  /** Путь к Crossover */
+  private crossoverPath = `${this.getAppDataBinaryFiles()}/CrossOver.app`;
+  /** Путь к инструменту создания бутылок Crossover */
+  private crossoverCxBottleExist = `${this.getCrossoverPath()}/Contents/SharedSupport/CrossOver/CrossOver-Hosted Application/cxbottle`;
+  /** Путь к инструменту запуска приложения Windows в бутылке */
+  private crossoverCxStartExist = `${this.getCrossoverPath()}/Contents/SharedSupport/CrossOver/bin/cxstart`;
   /** Объект для хранения данных из config.json */
   private configData: IStorage = {
     downloadURLOfGTASanAndreasFiles: null,
@@ -45,11 +55,6 @@ export class StorageService {
 
   /** Инициализация хранилища настроек приложения */
   private initStorage() {
-    this.homeDir = this.electronService.process.env.HOME as string;
-    this.userName = this.electronService.process.env.USER as string;
-    this.appDataPath = `${this.homeDir}/samp-launcher`;
-    this.configPath = `${this.getAppDataPath()}/config.json`;
-
     if (!this.electronService.fs.existsSync(this.getAppDataPath() as string)) {
       this.electronService.fs.mkdirSync(this.getAppDataPath() as string, {
         recursive: true,
@@ -123,14 +128,14 @@ export class StorageService {
     return this.userName;
   }
 
-  /** Путь к папке с приложениями MacOS */
-  public getApplicationDir() {
-    return this.applicationDir;
-  }
-
   /** Путь до данных samp-launcher */
   public getAppDataPath() {
     return this.appDataPath;
+  }
+
+  /** Бинарные файлы используемые лаунчером */
+  public getAppDataBinaryFiles() {
+    return this.appDataBinaryFiles;
   }
 
   /** Путь до основного файла настроек samp-launcher */
@@ -166,5 +171,20 @@ export class StorageService {
   /** Получить имя Crossover */
   public getCrossoverNameFile() {
     return this.crossoverNameFile;
+  }
+
+  /** Путь к Crossover */
+  public getCrossoverPath() {
+    return this.crossoverPath;
+  }
+
+  /** Путь к инструменту создания бутылок Crossover */
+  public getCrossoverCxBottleExist() {
+    return this.crossoverCxBottleExist;
+  }
+
+  /** Путь к инструменту запуска приложения Windows в бутылке */
+  public getCrossoverCxStartExist() {
+    return this.crossoverCxStartExist;
   }
 }

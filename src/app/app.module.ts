@@ -25,6 +25,7 @@ import { MainComponent } from './components/main/main.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { CrossoverComponent } from './components/crossover/crossover.component';
 import { CrossoverService } from './services/crossover.service';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,22 @@ import { CrossoverService } from './services/crossover.service';
     MatChipsModule,
     MatListModule,
     MatProgressBarModule,
+
+    ToastrModule.forRoot({
+      closeButton: true,
+      timeOut: 5000,
+      extendedTimeOut: 5000,
+      easing: 'ease-in-out',
+      easeTime: 500,
+      enableHtml: true,
+      progressBar: true,
+      progressAnimation: 'decreasing',
+      toastClass: 'ngx-toastr',
+      positionClass: 'toast-top-right',
+      titleClass: 'toast-title',
+      messageClass: 'toast-message',
+      tapToDismiss: true,
+    }),
   ],
   providers: [
     provideAnimationsAsync(),
