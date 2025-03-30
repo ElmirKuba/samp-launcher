@@ -12,6 +12,7 @@ import child_process from 'child_process';
 import util from 'util';
 import stream from 'stream';
 import extract from 'extract-zip';
+import bplist from 'bplist-parser';
 
 /**
  * Сервис для работы с API Electron и Node.js в Angular-приложении.
@@ -48,6 +49,8 @@ export class ElectronService {
   stream!: typeof stream;
   /** extract */
   extract!: typeof extract;
+  /** bplist */
+  bplist!: typeof bplist;
 
   constructor() {
     if (this.isElectron) {
@@ -64,6 +67,7 @@ export class ElectronService {
       this.util = (window as any).require('util');
       this.stream = (window as any).require('stream');
       this.extract = (window as any).require('extract-zip');
+      this.bplist = (window as any).require('bplist-parser');
 
       this.childProcess = (window as any).require('child_process');
       this.childProcess.exec('node -v', (error, stdout, stderr) => {

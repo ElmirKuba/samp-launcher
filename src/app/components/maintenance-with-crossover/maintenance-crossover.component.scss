@@ -1,0 +1,19 @@
+.app-maintenance-crossover {
+  mat-icon {
+    margin-right: 10px;
+    font-size: 24px;
+    vertical-align: middle;
+  }
+
+  &__completed-icon {
+    color: green;
+  }
+
+  &__uncompleted-icon {
+    color: red;
+  }
+
+  span {
+    vertical-align: middle;
+  }
+}

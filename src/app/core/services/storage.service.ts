@@ -35,6 +35,8 @@ export class StorageService {
   private crossoverCxBottleExist = `${this.getCrossoverPath()}/Contents/SharedSupport/CrossOver/CrossOver-Hosted Application/cxbottle`;
   /** Путь к инструменту запуска приложения Windows в бутылке */
   private crossoverCxStartExist = `${this.getCrossoverPath()}/Contents/SharedSupport/CrossOver/bin/cxstart`;
+  /** Основной конфиг Crossover */
+  private crossoverMainConfig = `/Users/${this.getUserName()}/Library/Preferences/com.codeweavers.CrossOver.plist`;
   /** Объект для хранения данных из config.json */
   private configData: IStorage = {
     downloadURLOfGTASanAndreasFiles: null,
@@ -196,5 +198,10 @@ export class StorageService {
   /** Установить путь до бутылок */
   public setCrossoverBottlesPath(newPath: string) {
     this.crossoverBottlesPath = newPath;
+  }
+
+  /** Основной конфиг Crossover */
+  public getCrossoverMainConfig() {
+    return this.crossoverMainConfig;
   }
 }
