@@ -12,6 +12,7 @@ import {
 } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { isArray } from 'lodash';
 
 /** Компонент настроек samp-launcher */
 @Component({
@@ -46,6 +47,9 @@ export class SettingsComponent implements OnInit {
       downloadURLOfCrossover: configAppAllData.downloadURLOfCrossover,
       nickNameSAMP: configAppAllData.nickNameSAMP,
       nameBottleCrossover: configAppAllData.nameBottleCrossover,
+      folderPathElementsOfGTASanAndreasFiles: [
+        ...configAppAllData.folderPathElementsOfGTASanAndreasFiles,
+      ],
     });
 
     this.reactiveKeywordsPathGTASAMP.set([
@@ -60,6 +64,13 @@ export class SettingsComponent implements OnInit {
 
     this.settingsForm.valueChanges.pipe(debounceTime(1000)).subscribe({
       next: (formDatas) => {
+        console.log(
+          'formDatas.folderPathElementsOfGTASanAndreasFiles.length',
+          formDatas.folderPathElementsOfGTASanAndreasFiles.length > 0
+            ? formDatas.folderPathElementsOfGTASanAndreasFiles
+            : this.reactiveKeywordsPathGTASAMP
+        );
+
         this.storageService.setAllData({
           downloadURLOfGTASanAndreasFiles:
             formDatas.downloadURLOfGTASanAndreasFiles,
