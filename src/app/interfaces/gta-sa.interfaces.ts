@@ -14,4 +14,6 @@ export interface IOneGTASAFileItem {
   hash: string;
   /** Размер файла GTA SAMP в байтах */
   size: number;
+  /** Версия файла */
+  version: number;
 }

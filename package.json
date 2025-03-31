@@ -39,7 +39,9 @@
     "test": "ng test --watch=false",
     "test:watch": "ng test",
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "samp-deploy:dev": "nodemon deployer/deployer.ts",
+    "samp-deploy:prod": "ts-node deployer/deployer.ts"
   },
   "dependencies": {
     "@angular/animations": "17.3.6",
@@ -58,6 +60,7 @@
     "extract-zip": "2.0.1",
     "lodash": "4.17.21",
     "ngx-toastr": "19.0.0",
+    "nodemon": "3.1.9",
     "rxjs": "7.8.1",
     "tslib": "2.6.2",
     "zone.js": "0.14.4"
@@ -78,6 +81,7 @@
     "@types/jest": "29.5.12",
     "@types/lodash": "4.17.16",
     "@types/node": "20.12.7",
+    "@types/nodemon": "1.19.6",
     "@typescript-eslint/eslint-plugin": "7.7.1",
     "@typescript-eslint/parser": "7.7.1",
     "conventional-changelog-cli": "4.1.0",
