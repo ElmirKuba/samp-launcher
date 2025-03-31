@@ -48,6 +48,12 @@ function scanDirectory(dir: string, relativePath: string = '') {
   });
 }
 
+scanDirectory(baseDir);
+console.log('resultScan::', resultScan);
+
+const jsonData = JSON.stringify(resultScan, null, 2);
+fs.writeFileSync(path.join(baseDir, 'version.json'), jsonData, 'utf-8');
+
 // /** Метод для скачивания файла по URL с использованием стрима */
 // async function downloadFile(url: string, localPath: string) {
 //   const writer = fs.createWriteStream(localPath); // Создаем поток записи в файл
@@ -137,6 +143,3 @@ function scanDirectory(dir: string, relativePath: string = '') {
 
 // // Запускаем процесс синхронизации
 // syncFiles();
-
-scanDirectory(baseDir);
-console.log('resultScan::', resultScan);
