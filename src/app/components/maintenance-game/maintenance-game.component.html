@@ -1,0 +1,45 @@
+<div class="app-maintenance-game">
+  <div class="app-maintenance-crossover">
+    <mat-card>
+      <mat-card-content>
+        <mat-list>
+          @if (gameStatusMaintenance ===
+          enumGameMaintenanceStatus.STATUS_UNDEFINED) {
+          <mat-list-item>
+            <mat-icon class="app-maintenance-crossover__uncompleted-icon">
+              warning
+            </mat-icon>
+            <span> Статус обслуживания игровой сборки неизвестен! </span>
+          </mat-list-item>
+          } @else if(gameStatusMaintenance ===
+          enumGameMaintenanceStatus.SUCCESS) {
+          <mat-list-item>
+            <mat-icon class="app-maintenance-game__completed-icon">
+              check_circle
+            </mat-icon>
+            <span> Игровая сборка готова к работе! </span>
+          </mat-list-item>
+          }
+
+          <!-- @else {
+          <mat-list-item>
+            <mat-icon class="app-maintenance-game__uncompleted-icon">
+              warning
+            </mat-icon>
+            <span> Игровая сборка не готова! </span>
+          </mat-list-item> -->
+
+          <!-- <button
+          class="app-maintenance-game__button"
+          mat-raised-button
+          color="primary"
+          (click)="createBottleCrossover()"
+        >
+          Создать бутылку "{{ nameBottleCrossover }}"
+        </button> -->
+          <!-- } -->
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

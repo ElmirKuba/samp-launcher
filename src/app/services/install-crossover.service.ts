@@ -29,7 +29,7 @@ export class InstallCrossoverService {
   }
 
   /** Запустить проверку работоспособности Crossover */
-  public async checkcrossoverStatusInstall(): Promise<void> {
+  public async checkCrossoverStatusInstall(): Promise<void> {
     /** Статус установленности Crossover */
     let status = this.checkCrossoverInstallation();
 

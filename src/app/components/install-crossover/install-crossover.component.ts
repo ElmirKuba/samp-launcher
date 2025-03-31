@@ -45,7 +45,7 @@ export class InstallCrossoverComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    void this.installCrossoverService.checkcrossoverStatusInstall();
+    void this.installCrossoverService.checkCrossoverStatusInstall();
 
     if (this.crossoverInstalledSubscription !== null) {
       this.crossoverInstalledSubscription.unsubscribe();
@@ -107,7 +107,7 @@ export class InstallCrossoverComponent implements OnInit, OnDestroy {
 
         this.modeProgress = 'indeterminate';
 
-        void this.installCrossoverService.checkcrossoverStatusInstall();
+        void this.installCrossoverService.checkCrossoverStatusInstall();
       }
     );
 
@@ -120,7 +120,7 @@ export class InstallCrossoverComponent implements OnInit, OnDestroy {
           'Ошибка работы с Crossover'
         );
 
-        void this.installCrossoverService.checkcrossoverStatusInstall();
+        void this.installCrossoverService.checkCrossoverStatusInstall();
       }
     );
   }

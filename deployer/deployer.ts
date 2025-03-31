@@ -6,6 +6,10 @@ const { createHash } = require('crypto');
 
 /** Описание одного элемента в свойстве files */
 interface IOneGTASAFileItem {
+  /** Относительный путь к файлу */
+  relativePath: string;
+  /** Конкретное наименование файла */
+  fileName: string;
   /** Хеш файла GTA SA в байтах */
   hash: string;
   /** Размер файла GTA SAMP в байтах */
@@ -34,12 +38,15 @@ function scanDirectory(dir: string, relativePath: string = '') {
   files.forEach((file) => {
     const fullPath = path.join(dir, file);
     const relativeFilePath = path.join(relativePath, file);
+    console.log('relativePath:>', relativePath);
     const stats = fs.statSync(fullPath);
 
     if (stats.isDirectory()) {
       scanDirectory(fullPath, relativeFilePath);
     } else {
       resultScan[relativeFilePath] = {
+        relativePath,
+        fileName: file,
         size: stats.size,
         hash: getFileHash(fullPath),
         version: 0.1, // Изначальная версия файла
@@ -49,10 +56,17 @@ function scanDirectory(dir: string, relativePath: string = '') {
 }
 
 scanDirectory(baseDir);
-console.log('resultScan::', resultScan);
+// console.log('resultScan::', resultScan);
 
 const jsonData = JSON.stringify(resultScan, null, 2);
-fs.writeFileSync(path.join(baseDir, 'version.json'), jsonData, 'utf-8');
+/** Путь version.json внутри игровой сборки */
+const pathToBuildVersionData = path.join(baseDir, 'version.json');
+
+if (fs.existsSync(pathToBuildVersionData)) {
+  fs.unlinkSync(pathToBuildVersionData);
+}
+
+fs.writeFileSync(pathToBuildVersionData, jsonData, 'utf-8');
 
 // /** Метод для скачивания файла по URL с использованием стрима */
 // async function downloadFile(url: string, localPath: string) {

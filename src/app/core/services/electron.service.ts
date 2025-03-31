@@ -6,7 +6,6 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import process from 'process';
-import axios from 'axios';
 import https from 'https';
 import child_process from 'child_process';
 import util from 'util';
@@ -37,8 +36,6 @@ export class ElectronService {
   path!: typeof path;
   /** Модуль process для доступа к информации о текущем процессе. */
   process!: typeof process;
-  /** axios */
-  axios!: typeof axios;
   /** https */
   https!: typeof https;
   /** child_process */
@@ -61,7 +58,6 @@ export class ElectronService {
       this.os = (window as any).require('os');
       this.path = (window as any).require('path');
       this.process = (window as any).require('process');
-      this.axios = (window as any).require('axios');
       this.https = (window as any).require('https');
       this.child_process = (window as any).require('child_process');
       this.util = (window as any).require('util');

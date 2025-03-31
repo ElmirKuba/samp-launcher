@@ -7,12 +7,17 @@
       @if(crossoverStatusInstall) {
       <app-maintenance-crossover></app-maintenance-crossover>
       }
+
       <!--  -->
+
       @if (crossoverStatusMaintenance ===
       enumCrossoverMaintenanceStatus.SUCCESS) {
+      <app-maintenance-game></app-maintenance-game>
+      }
+
       <div>
-        Показываем следующий компонент только когда Crossover и бутылка
-        обслужены... (в разработке)
+        <!-- Показываем следующий компонент только когда Crossover и бутылка
+        обслужены... (в разработке) -->
 
         <!-- TODO: Скачать игру по ссылке "downloadURLOfGTASanAndreasFiles" и положить внутри бутылки в drive_c/"folderPathElementsOfGTASanAndreasFiles" -->
         <!-- TODO: Найти файл эмулирующий пользовательскую часть реестра Windows внутри бутылки Crossover и добавить туда данные -->
@@ -27,7 +32,6 @@
         -->
         <!-- TODO: Играть -->
       </div>
-      }
     </mat-card-content>
   </mat-card>
 </div>

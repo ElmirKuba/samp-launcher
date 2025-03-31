@@ -12,7 +12,8 @@ import {
 } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { isArray } from 'lodash';
+import { cloneDeep } from 'lodash';
+import { ToastrService } from 'ngx-toastr';
 
 /** Компонент настроек samp-launcher */
 @Component({
@@ -21,8 +22,6 @@ import { isArray } from 'lodash';
   styleUrl: './settings.component.scss',
 })
 export class SettingsComponent implements OnInit {
-  // Разделители для ввода нового чипса
-
   readonly reactiveKeywordsPathGTASAMP = signal<string[]>([]);
 
   /** Форма компонента настроек samp-launcher */
@@ -36,7 +35,10 @@ export class SettingsComponent implements OnInit {
     serverAdresses: new FormArray([]),
   });
 
-  constructor(private storageService: StorageService) {}
+  constructor(
+    private storageService: StorageService,
+    private toastrService: ToastrService
+  ) {}
 
   ngOnInit(): void {
     const configAppAllData = this.storageService.getAllData();
@@ -64,13 +66,6 @@ export class SettingsComponent implements OnInit {
 
     this.settingsForm.valueChanges.pipe(debounceTime(1000)).subscribe({
       next: (formDatas) => {
-        console.log(
-          'formDatas.folderPathElementsOfGTASanAndreasFiles.length',
-          formDatas.folderPathElementsOfGTASanAndreasFiles.length > 0
-            ? formDatas.folderPathElementsOfGTASanAndreasFiles
-            : this.reactiveKeywordsPathGTASAMP
-        );
-
         this.storageService.setAllData({
           downloadURLOfGTASanAndreasFiles:
             formDatas.downloadURLOfGTASanAndreasFiles,
@@ -81,6 +76,11 @@ export class SettingsComponent implements OnInit {
           folderPathElementsOfGTASanAndreasFiles:
             formDatas.folderPathElementsOfGTASanAndreasFiles,
         });
+
+        this.toastrService.info(
+          'Настройки были сохранены в хранилище настроек!',
+          'Настройки'
+        );
       },
     });
   }
@@ -145,5 +145,15 @@ export class SettingsComponent implements OnInit {
       folderPathElementsOfGTASanAndreasFiles:
         this.reactiveKeywordsPathGTASAMP(),
     });
+  }
+
+  getPathItemForHtml(typePath: '/' | '\\\\' = '/') {
+    const pathItems = (
+      this.settingsForm.value.folderPathElementsOfGTASanAndreasFiles.length > 0
+        ? this.settingsForm.value.folderPathElementsOfGTASanAndreasFiles
+        : this.reactiveKeywordsPathGTASAMP()
+    ) as string[];
+
+    return pathItems.join(typePath);
   }
 }

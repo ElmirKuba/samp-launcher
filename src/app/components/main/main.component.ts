@@ -30,19 +30,6 @@ export class MainComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const storeTemp = this.storageService.getAllData();
-
-    console.log('______________________________');
-    console.log('storageService::', {
-      'URL загрузки файлов GTA SAMP сборки':
-        storeTemp.downloadURLOfGTASanAndreasFiles,
-      'Элементы пути до папки GTA San Andreas в MacOS и в бутылке Crossover':
-        storeTemp.folderPathElementsOfGTASanAndreasFiles,
-      'Ник игрока': storeTemp.nickNameSAMP,
-      'Массив данных серверов для игры': storeTemp.serverAdresses,
-    });
-    console.log('______________________________');
-
     if (this.crossoverInstalledSubscription !== null) {
       this.crossoverInstalledSubscription.unsubscribe();
       this.crossoverInstalledSubscription = null;

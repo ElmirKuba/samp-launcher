@@ -20,7 +20,6 @@ import { ElectronService } from './core/services/electron.service';
 import { StorageService } from './core/services/storage.service';
 import { SettingsComponent } from './components/settings/settings.component';
 import { FilesAngularService } from './services/files-check.service';
-import { AxiosAngularService } from './core/services/axios.service';
 import { MainComponent } from './components/main/main.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { InstallCrossoverComponent } from './components/install-crossover/install-crossover.component';
@@ -28,6 +27,8 @@ import { InstallCrossoverService } from './services/install-crossover.service';
 import { ToastrModule } from 'ngx-toastr';
 import { WorkingWithMaintenanceComponent } from './components/maintenance-with-crossover/maintenance-crossover.component';
 import { MaintenanceCrossoverService } from './services/maintenance-crossover.service';
+import { MaintenanceGameService } from './services/maintenance-game.service';
+import { MaintenanceGameComponent } from './components/maintenance-game/maintenance-game.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MaintenanceCrossoverService } from './services/maintenance-crossover.se
     MainComponent,
     InstallCrossoverComponent,
     WorkingWithMaintenanceComponent,
+    MaintenanceGameComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,11 +77,11 @@ import { MaintenanceCrossoverService } from './services/maintenance-crossover.se
     provideAnimationsAsync(),
     ElectronService,
     StorageService,
-    AxiosAngularService,
 
     FilesAngularService,
     InstallCrossoverService,
     MaintenanceCrossoverService,
+    MaintenanceGameService,
   ],
   bootstrap: [AppComponent],
 })

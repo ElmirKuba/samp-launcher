@@ -39,7 +39,7 @@ export class MaintenanceCrossoverService {
   }
 
   /** Запустить проверку работоспособности Crossover */
-  public async checkcrossoverStatusInstall(): Promise<void> {
+  public async checkCrossoverStatusInstall(): Promise<void> {
     /** Основной конфиг Crossover */
     const crossoverMainConfig = this.storageService.getCrossoverMainConfig();
 
@@ -357,7 +357,7 @@ export class MaintenanceCrossoverService {
   }
 
   /** Удаляет блок по названию из файла реестра Windows внутри бутылки Crossover */
-  removeRegistryBlock(filePath: string, blockHeader: string) {
+  public removeRegistryBlock(filePath: string, blockHeader: string) {
     /** Прочитанный файл */
     const content = this.electronService.fs.readFileSync(filePath, 'utf8');
     // /** Разбили на массив строк */
@@ -443,6 +443,6 @@ export class MaintenanceCrossoverService {
       return;
     }
 
-    await this.checkcrossoverStatusInstall();
+    await this.checkCrossoverStatusInstall();
   }
 }

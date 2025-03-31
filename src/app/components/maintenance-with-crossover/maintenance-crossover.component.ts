@@ -31,7 +31,7 @@ export class WorkingWithMaintenanceComponent implements OnInit, OnDestroy {
       'nameBottleCrossover'
     );
 
-    void this.maintenanceCrossoverService.checkcrossoverStatusInstall();
+    void this.maintenanceCrossoverService.checkCrossoverStatusInstall();
 
     if (this.crossoverMaintenanceSubscription !== null) {
       this.crossoverMaintenanceSubscription.unsubscribe();

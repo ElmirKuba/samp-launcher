@@ -5,13 +5,17 @@
         @if (crossoverStatusMaintenance ===
         enumCrossoverMaintenanceStatus.STATUS_UNDEFINED) {
         <mat-list-item>
-          <mat-icon class="app-crossover__uncompleted-icon">warning</mat-icon>
+          <mat-icon class="app-maintenance-crossover__uncompleted-icon">
+            warning
+          </mat-icon>
           <span> Статус обслуживания Crossover неизвестен! </span>
         </mat-list-item>
         } @else if (crossoverStatusMaintenance ===
         enumCrossoverMaintenanceStatus.BOTTLE_INVALID) {
         <mat-list-item>
-          <mat-icon class="app-crossover__uncompleted-icon">warning</mat-icon>
+          <mat-icon class="app-maintenance-crossover__uncompleted-icon">
+            warning
+          </mat-icon>
           <span> Бутылка "{{ nameBottleCrossover }}" не валидна! </span>
         </mat-list-item>
 

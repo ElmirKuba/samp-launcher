@@ -186,21 +186,17 @@
               Support/CrossOver/Bottles/{{
                 settingsForm.value["nameBottleCrossover"]
               }}/" (Если вы не переназначали путь по умолчанию в настройках
-              Crossover!).
-              <br />
-              Например вы введете "Games" и нажмете Enter, потом введете "SAMP"
-              и нажмете Enter, значит вы хотите сохранить скачиваемую сборку GTA
-              SAMP в папку "SAMP" в папке "Games".
-              <br /><br />
+              Crossover!). <br /><br />
               В таком случае скачанная сборка GTA SAMP будет храниться
               относительно операционной системы MacOS по пути "/Users/<ВАШЕ ИМЯ
               ПОЛЬЗОВАТЕЛЯ MACOS>/Library/Application
               Support/CrossOver/Bottles/{{
                 settingsForm.value["nameBottleCrossover"]
-              }}/drive_c/Games/SAMP/". <br /><br />
+              }}/drive_c/{{ getPathItemForHtml("/") }}". <br /><br />
               Сборка GTA SAMP будет считать что работает в среде Windows 7 32bit
-              и будет думать что храниться по пути "C:\\Games\\SAMP".
-              <br /><br />
+              и будет думать что храниться по пути "C:\\{{
+                getPathItemForHtml("\\\\")
+              }}". <br /><br />
               Не пытайтесь создать диск с литером "D" либо папку "drive_d" в
               папке вашей бутылки, мы не тестировали такое поведение лаунчера и
               Crossover. По умолчанию кроссовер работает с диском с литерой "C"!
@@ -216,10 +212,6 @@
               aria-label="Enter reactive form keywords"
               formControlName="folderPathElementsOfGTASanAndreasFiles"
             >
-              <!-- 
-            [formControl]="
-                settingsForm.controls['folderPathElementsOfGTASanAndreasFiles']
-              " -->
               @for (keyword of reactiveKeywordsPathGTASAMP(); track keyword) {
               <mat-chip-row (removed)="removeFolderPathElement(keyword)">
                 {{ keyword }}
