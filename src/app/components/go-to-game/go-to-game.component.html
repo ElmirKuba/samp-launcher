@@ -1,0 +1,47 @@
+<div class="app-go-to-game">
+  <mat-card>
+    <mat-card-content>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Серверы SAMP </mat-panel-title>
+          <mat-panel-description>
+            {{
+              serverAdresses.length
+                ? serverAdresses.length + " серверов"
+                : "Нет серверов"
+            }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="server-list">
+          <div
+            *ngFor="let server of serverAdresses; let i = index"
+            class="server-item"
+          >
+            <span class="server-info"> {{ server.ip }}:{{ server.port }} </span>
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="playOnServer(server)"
+            >
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- TODO: Скачать игру по ссылке "downloadURLOfGTASanAndreasFiles" и положить внутри бутылки в drive_c/"folderPathElementsOfGTASanAndreasFiles" -->
+<!-- TODO: Найти файл эмулирующий пользовательскую часть реестра Windows внутри бутылки Crossover и добавить туда данные -->
+<!-- 
+         * HKEY_CURRENT_USER\Software\SAMP (Software\\SAMP)
+         * ! Тут самп хранит настройки:
+         * [Software\\SAMP] 1741192462
+         * #time=1db8dec732d7024
+         * "ClientID"="SMJahratI2IkFOF"
+         * "gta_sa_exe"="C:\\SAMP\\gta_sa.exe" :: взять из config.json лаунчера -> folderPathElementsOfGTASanAndreasFiles
+         * "PlayerName"="YourNickName" :: взять из config.json лаунчера -> nickNameSAMP
+        -->
+<!-- TODO: Играть -->

@@ -1,0 +1,28 @@
+.app-go-to-game {
+  .server-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .server-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease;
+
+    &:hover {
+      background-color: #e0f7fa;
+    }
+  }
+
+  .server-info {
+    font-size: 14px;
+    font-weight: bold;
+  }
+}

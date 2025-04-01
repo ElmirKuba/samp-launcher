@@ -29,23 +29,32 @@ const allIcpEvents = (win: BrowserWindow) => {
    */
   ipcMain.handle(
     IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadFileWithProgress,
-    async (event, { url, savePath, fullPathWithName }) => {
+    async (event, { url, savePath, fullPathWithName, fileNeedToSave }) => {
       try {
-        await electronFileHelper.nodeDownloadFileWithProgress(
+        const result = await electronFileHelper.nodeDownloadFileWithProgress(
           win,
           url,
           savePath,
-          fullPathWithName
+          fullPathWithName,
+          fileNeedToSave
         );
 
-        return { success: true, error: null };
+        return {
+          success: true,
+          error: null,
+          data: result,
+        };
       } catch (error) {
         win.webContents.send(
           IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadProcessError,
           { error: JSON.parse(JSON.stringify(error)) }
         );
 
-        return { success: false, error };
+        return {
+          success: false,
+          error,
+          data: null,
+        };
       }
     }
   );

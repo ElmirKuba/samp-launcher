@@ -1,44 +1,74 @@
 <div class="app-maintenance-game">
-  <div class="app-maintenance-crossover">
-    <mat-card>
-      <mat-card-content>
-        <mat-list>
-          @if (gameStatusMaintenance ===
-          enumGameMaintenanceStatus.STATUS_UNDEFINED) {
-          <mat-list-item>
-            <mat-icon class="app-maintenance-crossover__uncompleted-icon">
-              warning
-            </mat-icon>
-            <span> Статус обслуживания игровой сборки неизвестен! </span>
-          </mat-list-item>
-          } @else if (gameStatusMaintenance ===
-          enumGameMaintenanceStatus.READY_FOR_VERIFICATION) {
-          <mat-list-item>
-            <mat-icon class="app-maintenance-crossover__uncompleted-icon">
-              search_check_2
-            </mat-icon>
-            <span> Игровая сборка готова к проверке! </span>
-          </mat-list-item>
+  <mat-card>
+    <mat-card-content>
+      <mat-list>
+        @if (gameStatusMaintenance ===
+        enumGameMaintenanceStatus.STATUS_UNDEFINED) {
+        <mat-list-item>
+          <mat-icon class="app-maintenance-crossover__uncompleted-icon">
+            warning
+          </mat-icon>
+          <span> Статус обслуживания игровой сборки неизвестен! </span>
+        </mat-list-item>
+        } @else if (gameStatusMaintenance ===
+        enumGameMaintenanceStatus.READY_FOR_VERIFICATION) {
+        <mat-list-item>
+          <mat-icon class="app-maintenance-crossover__uncompleted-icon">
+            search_check_2
+          </mat-icon>
+          <span> Игровая сборка готова к проверке! </span>
+        </mat-list-item>
 
-          <button
-            class="app-maintenance-game__button"
-            mat-raised-button
-            color="primary"
-            (click)="checkAndDownloadGame()"
-          >
-            Проверить игровую сборку
-          </button>
-          } @else if(gameStatusMaintenance ===
-          enumGameMaintenanceStatus.SUCCESS) {
-          <mat-list-item>
-            <mat-icon class="app-maintenance-game__completed-icon">
-              check_circle
-            </mat-icon>
-            <span> Игровая сборка готова к работе! </span>
-          </mat-list-item>
-          }
+        @if (!whichGameBuildFileIsCurrentlyBeingChecked) {
+        <button
+          class="app-maintenance-game__button"
+          mat-raised-button
+          color="primary"
+          (click)="checkGame()"
+        >
+          Проверить игровую сборку
+        </button>
+        } @else {
+        <div>
+          Проверяется файл: {{ whichGameBuildFileIsCurrentlyBeingChecked }}
+        </div>
+        }
+        <!--  -->
+        } @else if (gameStatusMaintenance ===
+        enumGameMaintenanceStatus.READY_FOR_DOWNLOAD) {
+        <mat-list-item>
+          <mat-icon class="app-maintenance-crossover__uncompleted-icon">
+            report
+          </mat-icon>
+          <span> Некоторые файлы требуют, чтобы их скачали </span>
+        </mat-list-item>
 
-          <!-- @else {
+        <button
+          class="app-maintenance-game__button"
+          mat-raised-button
+          color="primary"
+          (click)="downloadNecessaryFiles()"
+        >
+          Скачать необходимые файлы (в разработке...)
+        </button>
+        } @else if (gameStatusMaintenance ===
+        enumGameMaintenanceStatus.PROCESS_DOWNLOAD) {
+        <mat-progress-bar
+          class="app-crossover__progress"
+          [mode]="modeProgress"
+          [value]="installationProgress"
+        ></mat-progress-bar>
+        } @else if(gameStatusMaintenance === enumGameMaintenanceStatus.SUCCESS)
+        {
+        <mat-list-item>
+          <mat-icon class="app-maintenance-game__completed-icon">
+            check_circle
+          </mat-icon>
+          <span> Игровая сборка готова к работе! </span>
+        </mat-list-item>
+        }
+
+        <!-- @else {
           <mat-list-item>
             <mat-icon class="app-maintenance-game__uncompleted-icon">
               warning
@@ -46,8 +76,7 @@
             <span> Игровая сборка не готова! </span>
           </mat-list-item> 
           } -->
-        </mat-list>
-      </mat-card-content>
-    </mat-card>
-  </div>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
 </div>

@@ -40,6 +40,8 @@ export class StorageService {
   /** Crossover`ный заголовок в реестре Windows внутри бутылки для удаления во время обслуживания бутылки */
   private crossoverRegeditHeaderForRemoveRegeditBlock: string =
     'Software\\\\CodeWeavers\\\\CrossOver\\\\cxoffice';
+  /** Crossover`ный заголовок в реестре Windows внутри бутылки для SAMP */
+  private crossoverRegeditHeaderForSAMP: string = 'Software\\\\SAMP';
   /** Объект для хранения данных из config.json */
   private configData: IStorage = {
     downloadURLOfGTASanAndreasFiles: null,
@@ -211,5 +213,10 @@ export class StorageService {
   /** Crossover`ный заголовок в реестре Windows внутри бутылки для удаления во время обслуживания бутылки */
   public getCrossoverRegeditHeaderForRemoveRegeditBlock() {
     return this.crossoverRegeditHeaderForRemoveRegeditBlock;
+  }
+
+  /** Crossover`ный заголовок в реестре Windows внутри бутылки для SAMP */
+  public getCrossoverRegeditHeaderForSAMP() {
+    return this.crossoverRegeditHeaderForSAMP;
   }
 }

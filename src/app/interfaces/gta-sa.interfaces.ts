@@ -16,6 +16,10 @@ export interface IOneGTASAFileItem {
 export enum GameMaintenanceStatus {
   /** Игровая сборка успешно обслужена */
   SUCCESS = 'SUCCESS',
+  /** Процесс загрузки файлов */
+  PROCESS_DOWNLOAD = 'PROCESS_DOWNLOAD',
+  /** Надо скачать файлы сборки (частично или полностью) */
+  READY_FOR_DOWNLOAD = 'READY_FOR_DOWNLOAD',
   /** Игровая сборка готова к проверке по version.json */
   READY_FOR_VERIFICATION = 'READY_FOR_VERIFICATION',
   /** Статус обслуживания игровой сборки не известен */

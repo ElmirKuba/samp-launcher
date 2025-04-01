@@ -29,6 +29,8 @@ import { WorkingWithMaintenanceComponent } from './components/maintenance-with-c
 import { MaintenanceCrossoverService } from './services/maintenance-crossover.service';
 import { MaintenanceGameService } from './services/maintenance-game.service';
 import { MaintenanceGameComponent } from './components/maintenance-game/maintenance-game.component';
+import { GoToGameService } from './services/go-to-game.service';
+import { GoToGameComponent } from './components/go-to-game/go-to-game.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import { MaintenanceGameComponent } from './components/maintenance-game/maintena
     InstallCrossoverComponent,
     WorkingWithMaintenanceComponent,
     MaintenanceGameComponent,
+    GoToGameComponent,
   ],
   imports: [
     BrowserModule,
@@ -82,6 +85,7 @@ import { MaintenanceGameComponent } from './components/maintenance-game/maintena
     InstallCrossoverService,
     MaintenanceCrossoverService,
     MaintenanceGameService,
+    GoToGameService,
   ],
   bootstrap: [AppComponent],
 })

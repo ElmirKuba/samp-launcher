@@ -46,9 +46,9 @@ export class FilesAngularService {
     this.electronService.ipcRenderer.on(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadCompleteSuccess,
-      (event, { _ }) => {
+      (event, { returnData }) => {
         event;
-        _;
+        returnData;
 
         this.setDownloadFilesStatus(DownloadFilesStatus.SUCCESS_COMPLETE);
       }
@@ -62,6 +62,14 @@ export class FilesAngularService {
         this.setReasonErrorDownload(error);
       }
     );
+  }
+
+  /** Функция для вычисления SHA-256 хэша файла */
+  getFileHash(filePath: string): string {
+    const hash = this.electronService.crypto.createHash('sha256');
+    const fileBuffer = this.electronService.fs.readFileSync(filePath);
+    hash.update(fileBuffer);
+    return hash.digest('hex');
   }
 
   /** Проверка доступности удаленного файла по URL */
@@ -87,21 +95,26 @@ export class FilesAngularService {
    * @param savePath Путь для сохранения файла
    * @param fullPathWithName Путь для сохранения файла с учетом его наименования и расширения
    * @param nameFile Наименование файла
+   * @param fileNeedToSave Нужно ли сохранять файл или просто прочитать? (По умолчанию сохраняем файл)
    */
-  async downloadFileWithProgress(
+  async downloadFileWithProgress<ReturnedData = any>(
     url: string,
     savePath: string,
-    fullPathWithName: string
-  ): Promise<void> {
+    fullPathWithName: string | null = null,
+    fileNeedToSave: boolean = true
+  ): Promise<{ data: ReturnedData } | null> {
     try {
-      await this.electronService.ipcRenderer.invoke(
+      const result = await this.electronService.ipcRenderer.invoke(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         IPC_ELECTRON_IDENTIFIERS.fileInteraction
           .electronDownloadFileWithProgress,
-        { url, savePath, fullPathWithName }
+        { url, savePath, fullPathWithName, fileNeedToSave }
       );
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return result;
     } catch (azaza) {
-      //
+      return null;
     }
   }
 

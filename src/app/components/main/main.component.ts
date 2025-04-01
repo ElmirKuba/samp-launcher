@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { StorageService } from '../../core/services/storage.service';
 import { Subscription } from 'rxjs';
 import { InstallCrossoverService } from '../../services/install-crossover.service';
 import { CrossoverMaintenanceStatus } from '../../interfaces/crossover.interface';
 import { MaintenanceCrossoverService } from '../../services/maintenance-crossover.service';
+import { GameMaintenanceStatus } from '../../interfaces/gta-sa.interfaces';
+import { MaintenanceGameService } from '../../services/maintenance-game.service';
 
 @Component({
   selector: 'app-main',
@@ -22,11 +23,18 @@ export class MainComponent implements OnInit, OnDestroy {
   private crossoverMaintenanceSubscription: Subscription | null = null;
   /** Универсальные статусы обслуживания Crossover */
   protected enumCrossoverMaintenanceStatus = CrossoverMaintenanceStatus;
+  /** Подписант статуса работы игровой сборки */
+  private gameMaintenanceSubscription: Subscription | null = null;
+  /** Универсальные статусы обслуживания игровой сборки */
+  protected enumGameMaintenanceStatus = GameMaintenanceStatus;
+  /** Статус обслуживания игровой сборки */
+  public gameStatusMaintenance: GameMaintenanceStatus =
+    GameMaintenanceStatus.STATUS_UNDEFINED;
 
   constructor(
-    private storageService: StorageService,
     private installCrossoverService: InstallCrossoverService,
-    private maintenanceCrossoverService: MaintenanceCrossoverService
+    private maintenanceCrossoverService: MaintenanceCrossoverService,
+    private maintenanceGameService: MaintenanceGameService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +61,14 @@ export class MainComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (valueStatus) => {
           this.crossoverStatusMaintenance = valueStatus;
+        },
+      });
+
+    this.gameMaintenanceSubscription = this.maintenanceGameService
+      .getGameStatusMaintenance()
+      .subscribe({
+        next: (valueStatus) => {
+          this.gameStatusMaintenance = valueStatus;
         },
       });
   }

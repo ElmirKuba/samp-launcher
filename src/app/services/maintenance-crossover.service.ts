@@ -292,9 +292,6 @@ export class MaintenanceCrossoverService {
     const bottlePath = this.electronService.path.join(bottleDir, bottleName);
 
     if (this.electronService.fs.existsSync(bottlePath)) {
-      console.log(
-        `Бутылка ${bottleName} уже существует, потому что путь не свободен!`
-      );
       return {
         error: true,
         resultCreatedBottle: null,
@@ -397,6 +394,29 @@ export class MaintenanceCrossoverService {
     this.electronService.fs.writeFileSync(filePath, lines.join('\n'), 'utf8');
 
     // (`Блок [${blockHeader}] успешно удалён.`);
+  }
+
+  /** Создаёт блок в реестре Crossover без лишних пустых строк */
+  public addRegistryBlock(
+    filePath: string,
+    blockHeader: string,
+    newBlock: string
+  ) {
+    /** Прочитанный файл */
+    let content = this.electronService.fs.readFileSync(filePath, 'utf8').trim();
+
+    // Проверяем, существует ли уже такой блок
+    if (content.includes(`[${blockHeader}]`)) {
+      // (`Блок [${blockHeader}] уже существует.`);
+      return;
+    }
+
+    // Добавляем блок в конец файла без лишних переводов строк
+    content = `${content}\n\n${newBlock.trim()}`;
+
+    this.electronService.fs.writeFileSync(filePath, content, 'utf8');
+
+    // (`Блок [${blockHeader}] успешно создан.`);
   }
 
   /** Создать бутылку в Crossover */

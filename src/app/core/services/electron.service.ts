@@ -12,6 +12,7 @@ import util from 'util';
 import stream from 'stream';
 import extract from 'extract-zip';
 import bplist from 'bplist-parser';
+import crypto from 'crypto';
 
 /**
  * Сервис для работы с API Electron и Node.js в Angular-приложении.
@@ -48,6 +49,8 @@ export class ElectronService {
   extract!: typeof extract;
   /** bplist */
   bplist!: typeof bplist;
+  /** crypto */
+  crypto!: typeof crypto;
 
   constructor() {
     if (this.isElectron) {
@@ -64,6 +67,7 @@ export class ElectronService {
       this.stream = (window as any).require('stream');
       this.extract = (window as any).require('extract-zip');
       this.bplist = (window as any).require('bplist-parser');
+      this.crypto = (window as any).require('crypto');
 
       this.childProcess = (window as any).require('child_process');
     }

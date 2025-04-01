@@ -33,14 +33,22 @@ export class ElectronFileHelper {
    * @param url URL для скачивания файла
    * @param savePath Путь для сохранения файла
    * @param fullPathWithName Путь для сохранения файла с учетом его наименования и расширения
+   * @param fileNeedToSave Нужно ли сохранять файл или просто прочитать? (По умолчанию сохраняем файл)
    */
   public nodeDownloadFileWithProgress = async (
     win: BrowserWindow,
     url: string,
     savePath: string,
-    fullPathWithName: string
+    fullPathWithName: string | null = null,
+    fileNeedToSave: boolean = true
   ) => {
-    if (fs.existsSync(fullPathWithName)) {
+    let returnedResolveMethond: Function;
+
+    const returnedPromise = new Promise<any>((resolve) => {
+      returnedResolveMethond = resolve;
+    });
+
+    if (fullPathWithName && fs.existsSync(fullPathWithName)) {
       fs.unlinkSync(fullPathWithName);
     }
 
@@ -61,9 +69,15 @@ export class ElectronFileHelper {
     const total = parseInt(response.headers['content-length'] || '0', 10);
     /** Сколько загружено будет тут храним */
     let loaded = 0;
+    /** Данные загруженного файла, если его не надо сохранять */
+    let dataChunks: Buffer[] = [];
 
     response.data.on('data', (chunk: Buffer) => {
       loaded += chunk.length;
+
+      if (fileNeedToSave !== true || !fullPathWithName) {
+        dataChunks.push(chunk);
+      }
 
       win.webContents.send(
         IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadProgress,
@@ -77,15 +91,46 @@ export class ElectronFileHelper {
       });
     }
 
-    await this.pipelineAsync(
-      response.data,
-      fs.createWriteStream(fullPathWithName)
-    );
+    if (fileNeedToSave === true || fullPathWithName) {
+      await this.pipelineAsync(
+        response.data,
+        fs.createWriteStream(fullPathWithName)
+      );
 
-    win.webContents.send(
-      IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadCompleteSuccess,
-      {}
-    );
+      win.webContents.send(
+        IPC_ELECTRON_IDENTIFIERS.fileInteraction
+          .electronDownloadCompleteSuccess,
+        {}
+      );
+
+      returnedResolveMethond(null);
+    } else {
+      response.data.on('end', () => {
+        const fileData = Buffer.concat(dataChunks).toString('utf-8');
+
+        try {
+          const parsedData = JSON.parse(fileData);
+
+          win.webContents.send(
+            IPC_ELECTRON_IDENTIFIERS.fileInteraction
+              .electronDownloadCompleteSuccess,
+            { returnData: parsedData }
+          );
+
+          returnedResolveMethond(parsedData);
+        } catch (error) {
+          win.webContents.send(
+            IPC_ELECTRON_IDENTIFIERS.fileInteraction
+              .electronDownloadCompleteSuccess,
+            { returnData: fileData }
+          );
+
+          returnedResolveMethond(fileData);
+        }
+      });
+    }
+
+    return await returnedPromise;
   };
 
   /** Метод для отмены загрузки */

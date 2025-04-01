@@ -31,9 +31,14 @@ class ElectronFileHelper {
          * @param url URL для скачивания файла
          * @param savePath Путь для сохранения файла
          * @param fullPathWithName Путь для сохранения файла с учетом его наименования и расширения
+         * @param fileNeedToSave Нужно ли сохранять файл или просто прочитать? (По умолчанию сохраняем файл)
          */
-        this.nodeDownloadFileWithProgress = (win, url, savePath, fullPathWithName) => __awaiter(this, void 0, void 0, function* () {
-            if (fs.existsSync(fullPathWithName)) {
+        this.nodeDownloadFileWithProgress = (win_1, url_1, savePath_1, ...args_1) => __awaiter(this, [win_1, url_1, savePath_1, ...args_1], void 0, function* (win, url, savePath, fullPathWithName = null, fileNeedToSave = true) {
+            let returnedResolveMethond;
+            const returnedPromise = new Promise((resolve) => {
+                returnedResolveMethond = resolve;
+            });
+            if (fullPathWithName && fs.existsSync(fullPathWithName)) {
                 fs.unlinkSync(fullPathWithName);
             }
             // Отменяем предыдущую загрузку, если она ещё идёт
@@ -50,8 +55,13 @@ class ElectronFileHelper {
             const total = parseInt(response.headers['content-length'] || '0', 10);
             /** Сколько загружено будет тут храним */
             let loaded = 0;
+            /** Данные загруженного файла, если его не надо сохранять */
+            let dataChunks = [];
             response.data.on('data', (chunk) => {
                 loaded += chunk.length;
+                if (fileNeedToSave !== true || !fullPathWithName) {
+                    dataChunks.push(chunk);
+                }
                 win.webContents.send(ipc_identifiers_1.IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadProgress, { loaded, total });
             });
             if (!fs.existsSync(savePath)) {
@@ -59,8 +69,29 @@ class ElectronFileHelper {
                     recursive: true,
                 });
             }
-            yield this.pipelineAsync(response.data, fs.createWriteStream(fullPathWithName));
-            win.webContents.send(ipc_identifiers_1.IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadCompleteSuccess, {});
+            if (fileNeedToSave === true || fullPathWithName) {
+                yield this.pipelineAsync(response.data, fs.createWriteStream(fullPathWithName));
+                win.webContents.send(ipc_identifiers_1.IPC_ELECTRON_IDENTIFIERS.fileInteraction
+                    .electronDownloadCompleteSuccess, {});
+                returnedResolveMethond(null);
+            }
+            else {
+                response.data.on('end', () => {
+                    const fileData = Buffer.concat(dataChunks).toString('utf-8');
+                    try {
+                        const parsedData = JSON.parse(fileData);
+                        win.webContents.send(ipc_identifiers_1.IPC_ELECTRON_IDENTIFIERS.fileInteraction
+                            .electronDownloadCompleteSuccess, { returnData: parsedData });
+                        returnedResolveMethond(parsedData);
+                    }
+                    catch (error) {
+                        win.webContents.send(ipc_identifiers_1.IPC_ELECTRON_IDENTIFIERS.fileInteraction
+                            .electronDownloadCompleteSuccess, { returnData: fileData });
+                        returnedResolveMethond(fileData);
+                    }
+                });
+            }
+            return yield returnedPromise;
         });
     }
     /** Возвращает единственный возможный экземпляр */
