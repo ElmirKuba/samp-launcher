@@ -36,6 +36,11 @@ export class MaintenanceGameComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Проверяем и скачиваем игру */
+  checkAndDownloadGame() {
+    this.maintenanceGameService.checkAndDownloadGame();
+  }
+
   ngOnDestroy(): void {
     if (this.gameMaintenanceSubscription !== null) {
       this.gameMaintenanceSubscription.unsubscribe();

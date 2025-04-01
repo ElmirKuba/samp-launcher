@@ -31,9 +31,8 @@ class ElectronFileHelper {
          * @param url URL для скачивания файла
          * @param savePath Путь для сохранения файла
          * @param fullPathWithName Путь для сохранения файла с учетом его наименования и расширения
-         * @param nameFile Наименование файла
          */
-        this.nodeDownloadFileWithProgress = (win, url, savePath, fullPathWithName, nameFile) => __awaiter(this, void 0, void 0, function* () {
+        this.nodeDownloadFileWithProgress = (win, url, savePath, fullPathWithName) => __awaiter(this, void 0, void 0, function* () {
             if (fs.existsSync(fullPathWithName)) {
                 fs.unlinkSync(fullPathWithName);
             }

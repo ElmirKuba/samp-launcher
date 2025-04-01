@@ -3,7 +3,10 @@ import { InstallCrossoverService } from '../../services/install-crossover.servic
 import { Subscription } from 'rxjs';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { FilesAngularService } from '../../services/files-check.service';
-import { IDownloadProgress } from '../../interfaces/files.interfaces';
+import {
+  DownloadFilesStatus,
+  IDownloadProgress,
+} from '../../interfaces/files.interfaces';
 import { ElectronService } from '../../core/services/electron.service';
 import { IPC_ELECTRON_IDENTIFIERS } from '../../../../app/helpers/ipc-identifiers';
 import { ToastrService } from 'ngx-toastr';
@@ -22,6 +25,8 @@ export class InstallCrossoverComponent implements OnInit, OnDestroy {
   progressDownloadSubscription: Subscription | null = null;
   /** Процесс распаковки Crossover */
   processExtractCrossover: Subscription | null = null;
+  /** Статус скачивания файлов */
+  subsDownloadFilesStatus: Subscription | null = null;
   /** Результат подписи статуса работы Crossover */
   crossoverStatusInstall!: boolean;
   /** Значение прогресса (0–100) */
@@ -98,31 +103,34 @@ export class InstallCrossoverComponent implements OnInit, OnDestroy {
         },
       });
 
-    this.electronService.ipcRenderer.on(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadCompleteSuccess,
-      (event, { _ }) => {
-        event;
-        _;
+    if (this.subsDownloadFilesStatus !== null) {
+      this.subsDownloadFilesStatus.unsubscribe();
+      this.subsDownloadFilesStatus = null;
+    }
 
-        this.modeProgress = 'indeterminate';
+    this.subsDownloadFilesStatus = this.filesAngularService
+      .getDownloadFilesStatus()
+      .subscribe({
+        next: (status) => {
+          if (status === DownloadFilesStatus.SUCCESS_COMPLETE) {
+            this.modeProgress = 'indeterminate';
 
-        void this.installCrossoverService.checkCrossoverStatusInstall();
-      }
-    );
+            void this.installCrossoverService.checkCrossoverStatusInstall();
+          }
 
-    this.electronService.ipcRenderer.on(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadProcessError,
-      (event: any, { error }) => {
-        this.toastr.error(
-          `Скачать файл по ссылке "${error.config.url}" не получилось. Код причины: ${error.message}`,
-          'Ошибка работы с Crossover'
-        );
+          if (status === DownloadFilesStatus.ERROR) {
+            const reasonErrorDownload =
+              this.filesAngularService.getReasonErrorDownload();
 
-        void this.installCrossoverService.checkCrossoverStatusInstall();
-      }
-    );
+            this.toastr.error(
+              `Скачать файл по ссылке "${reasonErrorDownload?.config?.url}" не получилось. Код причины: ${reasonErrorDownload?.message}`,
+              'Ошибка работы с Crossover'
+            );
+
+            void this.installCrossoverService.checkCrossoverStatusInstall();
+          }
+        },
+      });
   }
 
   ngOnDestroy(): void {
@@ -139,6 +147,11 @@ export class InstallCrossoverComponent implements OnInit, OnDestroy {
     if (this.processExtractCrossover !== null) {
       this.processExtractCrossover.unsubscribe();
       this.processExtractCrossover = null;
+    }
+
+    if (this.subsDownloadFilesStatus !== null) {
+      this.subsDownloadFilesStatus.unsubscribe();
+      this.subsDownloadFilesStatus = null;
     }
   }
 

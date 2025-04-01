@@ -3,6 +3,7 @@ import { StorageService } from '../core/services/storage.service';
 import { GameMaintenanceStatus } from '../interfaces/gta-sa.interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { ElectronService } from '../core/services/electron.service';
+import { FilesAngularService } from './files-check.service';
 
 @Injectable()
 export class MaintenanceGameService {
@@ -13,7 +14,8 @@ export class MaintenanceGameService {
 
   constructor(
     private storageService: StorageService,
-    private electronService: ElectronService
+    private electronService: ElectronService,
+    private filesAngularService: FilesAngularService
   ) {}
 
   /** Получить поток состояния обслуживания игровой сборки */
@@ -38,13 +40,12 @@ export class MaintenanceGameService {
     );
     /** Путь до бутылок */
     const crossoverBottlesPath = this.storageService.getCrossoverBottlesPath();
-
+    /** Чипсы пути до игровой сборки */
     const pathToGameJoined = folderPathElementsOfGTASanAndreasFiles.reduce(
       (prev: string, curr: string) => {
         return this.electronService.path.join(prev, curr);
       }
     );
-
     /** Путь до игровой сборки */
     const pathToGameBuild = this.electronService.path.join(
       crossoverBottlesPath,
@@ -66,35 +67,42 @@ export class MaintenanceGameService {
     );
 
     /** URL загрузки файлов GTA SAMP сборки */
-    const downloadURLOfGTASanAndreasFiles = this.storageService.getValue(
-      'downloadURLOfGTASanAndreasFiles'
-    );
+    const downloadURLOfGTASanAndreasFiles =
+      this.storageService.getValue<string>('downloadURLOfGTASanAndreasFiles');
 
     if (!this.electronService.fs.existsSync(pathToBuildVersionData)) {
-      /**
-       * Это значит что в том месте в бутылке Crossover где должна лежать сборка GTA SAMP мы не нашли version.json.
-       * 1. Взять "downloadURLOfGTASanAndreasFiles" и 'version.json' и вместе их join, назвать например ToBuildVersionData.
-       * 2. Взять "ToBuildVersionData" и скачать его, записать по пути где будем хранить сборку GTA SAMP, а именно в "pathToGameBuild".
-       * 3. Теперь мы имеем файл 'version.json' в "pathToGameBuild", то есть путь "pathToBuildVersionData" будет корректный.
-       * 4. Здесь нас ничего не ждет, снова запускаем "this.checkMaintenanceGame()""
-       */
-      console.log(1);
-    } else {
-      /**
-       * Это значит что в том месте в бутылке Crossover где должна лежать сборка GTA SAMP мы нашли version.json, то есть путь "pathToBuildVersionData" будет корректный.
-       * 1. Читаем version.json по пути "pathToBuildVersionData" в память приложения.
-       * 2. Получаем список файлов с помощью возможно Object.entries.
-       * 3. Бегаем по списку файлов и смотрим их наличие.
-       *    3.1. При отсутствии файла или не совпадения хэша и размера в байтах - кладем этот файл в массив на загрузку.
-       *    3.2. Бегаем по массиву на загрузку, если файл есть - удаляем.
-       *    3.3. Бегаем по массиву на загрузку, файл соединяем с "downloadURLOfGTASanAndreasFiles", скачиваем и кладем в "pathToGameBuild".
-       */
-      console.log(2);
+      /** Путь version.json по URL нахождения игровой сборки */
+      const toBuildVersionData = this.electronService.path.join(
+        downloadURLOfGTASanAndreasFiles,
+        'version.json'
+      );
+
+      void this.filesAngularService.downloadFileWithProgress(
+        toBuildVersionData,
+        pathToGameBuild,
+        pathToBuildVersionData
+      );
     }
 
-    // console.log(
-    //   'downloadURLOfGTASanAndreasFiles>>',
-    //   downloadURLOfGTASanAndreasFiles
-    // );
+    this.setGameStatusMaintenance(GameMaintenanceStatus.READY_FOR_VERIFICATION);
   }
+
+  /** Проверяем и скачиваем игру */
+  public checkAndDownloadGame() {
+    /**
+     * План действий:
+     * 1. Прочитать файл version.json в папке сборки GTA SAMP внутри бутылки.
+     * 2. Бегаем по файлам и смотрим, если их нет физически, то кидаем в массив для скачивания.
+     * 3. Если файл есть физически то смотрим его размер и хэш - отличается? Удаляем файл и кидаем в массив для скачивания.
+     * 4. Если в массиве для скачивания есть данные, то скачиваем их.
+     */
+    console.log('Проверяем и скачиваем игру');
+
+    this.setGameStatusMaintenance(GameMaintenanceStatus.READY_FOR_VERIFICATION);
+  }
+
+  // console.log(
+  //   'downloadURLOfGTASanAndreasFiles>>',
+  //   downloadURLOfGTASanAndreasFiles
+  // );
 }

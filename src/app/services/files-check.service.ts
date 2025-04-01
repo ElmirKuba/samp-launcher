@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ElectronService } from '../core/services/electron.service';
 import { BehaviorSubject } from 'rxjs';
-import { IDownloadProgress } from '../interfaces/files.interfaces';
+import {
+  DownloadFilesStatus,
+  IDownloadProgress,
+} from '../interfaces/files.interfaces';
 import { IPC_ELECTRON_IDENTIFIERS } from '../../../app/helpers/ipc-identifiers';
 import { StorageService } from '../core/services/storage.service';
 import { ToastrService } from 'ngx-toastr';
@@ -18,6 +21,12 @@ export class FilesAngularService {
   );
   /** BehaviorSubject для отслеживания распаковки Crossover */
   private extractCrossover = new BehaviorSubject<string | null>(null);
+  /** BehaviorSubject для отслеживания прогресса загрузки */
+  private downloadFilesStatus = new BehaviorSubject<DownloadFilesStatus>(
+    DownloadFilesStatus.STATUS_UNDEFINED
+  );
+  /** Причина ошибки скачивания файлов */
+  private reasonErrorDownload: any | null = null;
 
   constructor(
     private electronService: ElectronService,
@@ -31,6 +40,26 @@ export class FilesAngularService {
         const progressDecimal = total ? Math.floor((loaded / total) * 100) : 0;
 
         this.setDownloadProgress({ loaded, total, progressDecimal });
+      }
+    );
+
+    this.electronService.ipcRenderer.on(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadCompleteSuccess,
+      (event, { _ }) => {
+        event;
+        _;
+
+        this.setDownloadFilesStatus(DownloadFilesStatus.SUCCESS_COMPLETE);
+      }
+    );
+
+    this.electronService.ipcRenderer.on(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadProcessError,
+      (event: any, { error }) => {
+        this.setDownloadFilesStatus(DownloadFilesStatus.ERROR);
+        this.setReasonErrorDownload(error);
       }
     );
   }
@@ -62,15 +91,14 @@ export class FilesAngularService {
   async downloadFileWithProgress(
     url: string,
     savePath: string,
-    fullPathWithName: string,
-    nameFile: string = url.split('/')[url.split('/').length - 1]
+    fullPathWithName: string
   ): Promise<void> {
     try {
       await this.electronService.ipcRenderer.invoke(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         IPC_ELECTRON_IDENTIFIERS.fileInteraction
           .electronDownloadFileWithProgress,
-        { url, savePath, fullPathWithName, nameFile }
+        { url, savePath, fullPathWithName }
       );
     } catch (azaza) {
       //
@@ -168,5 +196,29 @@ export class FilesAngularService {
   /** Установить состояние потока расспаковки Crossover */
   public setExtractCrossover(status: string | null) {
     this.extractCrossover.next(status);
+  }
+
+  /** Установить статус загрузки файла */
+  public setDownloadFilesStatus(newStatus: DownloadFilesStatus) {
+    this.downloadFilesStatus.next(newStatus);
+  }
+
+  /** Получить поток статуса загрузки файла */
+  public getDownloadFilesStatus(): BehaviorSubject<DownloadFilesStatus> {
+    return this.downloadFilesStatus;
+  }
+
+  /** Установить причину ошибки скачивания файлов */
+  public setReasonErrorDownload(error: any) {
+    this.reasonErrorDownload = error;
+  }
+
+  /** Получить один раз причину ошибки скачивания файлов */
+  public getReasonErrorDownload() {
+    const reasonErrorDownload = this.reasonErrorDownload;
+    this.reasonErrorDownload = null;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return reasonErrorDownload;
   }
 }

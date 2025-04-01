@@ -37,3 +37,15 @@ export interface IResultDownloadFile {
   maxByteLength: number;
   resizable: boolean;
 }
+
+/** Статус загрузки файлов */
+export enum DownloadFilesStatus {
+  /** Файлы загружены успешно */
+  SUCCESS_COMPLETE = 'SUCCESS',
+  /** Ошибка загрузки файлов */
+  ERROR = 'ERROR',
+  /** Загрузка файлов в процессе */
+  PROCESS = 'PROCESS',
+  /** Статус загрузки файлов не известен */
+  STATUS_UNDEFINED = 'STATUS_UNDEFINED',
+}

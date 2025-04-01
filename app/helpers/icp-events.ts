@@ -29,14 +29,13 @@ const allIcpEvents = (win: BrowserWindow) => {
    */
   ipcMain.handle(
     IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadFileWithProgress,
-    async (event, { url, savePath, fullPathWithName, nameFile }) => {
+    async (event, { url, savePath, fullPathWithName }) => {
       try {
         await electronFileHelper.nodeDownloadFileWithProgress(
           win,
           url,
           savePath,
-          fullPathWithName,
-          nameFile
+          fullPathWithName
         );
 
         return { success: true, error: null };

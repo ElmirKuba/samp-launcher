@@ -32,9 +32,9 @@ const allIcpEvents = (win) => {
      * @param savePath Путь для сохранения файла
      * @param nameFile Наименование файла
      */
-    electron_1.ipcMain.handle(ipc_identifiers_1.IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadFileWithProgress, (event_1, _a) => __awaiter(void 0, [event_1, _a], void 0, function* (event, { url, savePath, fullPathWithName, nameFile }) {
+    electron_1.ipcMain.handle(ipc_identifiers_1.IPC_ELECTRON_IDENTIFIERS.fileInteraction.electronDownloadFileWithProgress, (event_1, _a) => __awaiter(void 0, [event_1, _a], void 0, function* (event, { url, savePath, fullPathWithName }) {
         try {
-            yield electronFileHelper.nodeDownloadFileWithProgress(win, url, savePath, fullPathWithName, nameFile);
+            yield electronFileHelper.nodeDownloadFileWithProgress(win, url, savePath, fullPathWithName);
             return { success: true, error: null };
         }
         catch (error) {

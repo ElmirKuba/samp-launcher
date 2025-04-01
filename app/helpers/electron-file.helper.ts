@@ -33,14 +33,12 @@ export class ElectronFileHelper {
    * @param url URL для скачивания файла
    * @param savePath Путь для сохранения файла
    * @param fullPathWithName Путь для сохранения файла с учетом его наименования и расширения
-   * @param nameFile Наименование файла
    */
   public nodeDownloadFileWithProgress = async (
     win: BrowserWindow,
     url: string,
     savePath: string,
-    fullPathWithName: string,
-    nameFile: string
+    fullPathWithName: string
   ) => {
     if (fs.existsSync(fullPathWithName)) {
       fs.unlinkSync(fullPathWithName);

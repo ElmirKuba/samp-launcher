@@ -155,8 +155,7 @@ export class InstallCrossoverService {
     void this.filesAngularService.downloadFileWithProgress(
       downloadURLOfCrossover,
       pathForCrossoverFolder,
-      pathForFileCrossover,
-      crossoverNameFile
+      pathForFileCrossover
     );
   }
 

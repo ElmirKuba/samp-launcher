@@ -11,6 +11,23 @@
             </mat-icon>
             <span> Статус обслуживания игровой сборки неизвестен! </span>
           </mat-list-item>
+          } @else if (gameStatusMaintenance ===
+          enumGameMaintenanceStatus.READY_FOR_VERIFICATION) {
+          <mat-list-item>
+            <mat-icon class="app-maintenance-crossover__uncompleted-icon">
+              search_check_2
+            </mat-icon>
+            <span> Игровая сборка готова к проверке! </span>
+          </mat-list-item>
+
+          <button
+            class="app-maintenance-game__button"
+            mat-raised-button
+            color="primary"
+            (click)="checkAndDownloadGame()"
+          >
+            Проверить игровую сборку
+          </button>
           } @else if(gameStatusMaintenance ===
           enumGameMaintenanceStatus.SUCCESS) {
           <mat-list-item>
@@ -27,17 +44,8 @@
               warning
             </mat-icon>
             <span> Игровая сборка не готова! </span>
-          </mat-list-item> -->
-
-          <!-- <button
-          class="app-maintenance-game__button"
-          mat-raised-button
-          color="primary"
-          (click)="createBottleCrossover()"
-        >
-          Создать бутылку "{{ nameBottleCrossover }}"
-        </button> -->
-          <!-- } -->
+          </mat-list-item> 
+          } -->
         </mat-list>
       </mat-card-content>
     </mat-card>
